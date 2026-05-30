@@ -1,6 +1,6 @@
 "use client";
 
-import type { BrokerWithRelations, ResidencyStatus } from "../../types/database";
+import type { BrokerWithRelations, ResidencyStatus } from "@/types/database";
 
 interface BrokerCardsProps {
   brokers: BrokerWithRelations[];
@@ -53,21 +53,19 @@ export function BrokerCards({ brokers, currentStatus }: BrokerCardsProps) {
               {/* Шлюзы пополнения (Funding Routes) */}
               <div className="space-y-3 mt-4">
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Шлюзы из банков Сербии:</h4>
-                {broker.broker_funding_routes?.length > 0 ? (
-                  broker.broker_funding_routes.map((route) => (
-                    <div key={route.id} className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-xs">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-semibold text-slate-700">
-                          {route.bank_name} ({route.method.toUpperCase()})
-                        </span>
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                {broker.funding_routes && broker.funding_routes.length > 0 ? (
+                  broker.funding_routes.map((route) => (
+                    <div key={route.id} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold text-slate-700">{route.bank_name}</span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${
                           route.success_rate === 'high' ? 'bg-emerald-100 text-emerald-800' :
                           route.success_rate === 'medium' ? 'bg-amber-100 text-amber-800' :
                           route.success_rate === 'low' ? 'bg-orange-100 text-orange-800' : 'bg-rose-100 text-rose-800'
                         }`}>
                           {route.success_rate === 'high' ? 'Проходит' :
-                           route.success_rate === 'medium' ? 'Лимиты' :
-                           route.success_rate === 'low' ? 'Сложно' : 'Блок'}
+                          route.success_rate === 'medium' ? 'Лимиты' :
+                          route.success_rate === 'low' ? 'Сложно' : 'Блок'}
                         </span>
                       </div>
                       <p className="text-slate-500 text-[11px] leading-relaxed">{route.user_reports_summary}</p>

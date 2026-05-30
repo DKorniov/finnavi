@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { DepositRate, BondYield, CurrencySpread } from "../../types/database";
+import type { DepositRate, BondYield, CurrencySpread } from "@/types/database";
 
 interface YieldComparatorProps {
   deposits: DepositRate[];
