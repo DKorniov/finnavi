@@ -1,0 +1,120 @@
+{
+  "bank_id": "postanska_rs",
+  "brand_name": "Poštanska Štedionica",
+  "official_name": "Banka Poštanska štedionica a.d. Beograd",
+  "maticni_broj": "07004893",
+  "website": "https://www.posted.co.rs",
+  "last_updated": "2026-05-30",
+  "kyc_matrix": [
+    {
+      "status": "non_resident",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "Белый картон (Prijava boravišta)"],
+      "red_flags": ["Открывают счета туристам за 1-3 дня. Придется заполнить 5-6 бумажных анкет в отделении."]
+    },
+    {
+      "status": "resident_less_1y",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "Белый картон / ID-карта ВНЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "resident_more_1y",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "non_resident",
+      "legal_type": "business",
+      "is_available": false,
+      "probability": "blocked",
+      "required_docs": [],
+      "red_flags": ["Для открытия счета ИП (Preduzetnik) требуется решение из реестра APR."]
+    },
+    {
+      "status": "resident_less_1y",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "Белый картон / ВНЖ", "Решение APR"],
+      "red_flags": ["Самый лояльный банк для новых ИП. Не просят рабочие контракты или инвойсы для открытия счета."]
+    },
+    {
+      "status": "resident_more_1y",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ", "Решение APR"],
+      "red_flags": []
+    }
+  ],
+  "products": [
+    {
+      "product_id": "ps_personal_racun_plus",
+      "name": "Račun Plus (Личный счет)",
+      "category": "personal_account",
+      "is_multicurrency": true,
+      "supported_currencies": ["RSD", "EUR", "USD", "CHF"],
+      "maintenance_fee_rsd": 250,
+      "swift_in": {
+        "pct": 0,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": "Банк не берет свою комиссию за вход. EUR, но банки-корреспонденты могут отщипнуть от 0 до 50 EUR."
+      },
+      "swift_out": {
+        "pct": 0.40,
+        "min_rsd": 2500,
+        "max_rsd": null
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": true,
+        "garmin_pay": false,
+        "prenesi": true,
+        "ips_qr": true
+      },
+      "cards": {
+        "dina_notes": "Выдается бесплатно.",
+        "international": ["Mastercard", "Visa"]
+      }
+    },
+    {
+      "product_id": "ps_business_account",
+      "name": "Poslovni račun (ИП / Preduzetnik)",
+      "category": "business_account",
+      "is_multicurrency": false,
+      "supported_currencies": ["RSD", "EUR", "RUB"],
+      "maintenance_fee_rsd": 300,
+      "swift_in": {
+        "pct": 0,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": "USD не принимают. Рубли принимают без проблем."
+      },
+      "swift_out": {
+        "pct": 0.25,
+        "min_rsd": 5000,
+        "max_rsd": null
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": true,
+        "garmin_pay": false,
+        "prenesi": false,
+        "ips_qr": true
+      },
+      "cards": {
+        "dina_notes": "Используется для снятия наличных в банкоматах банка без комиссии.",
+        "international": ["Mastercard Business"]
+      }
+    }
+  ]
+}

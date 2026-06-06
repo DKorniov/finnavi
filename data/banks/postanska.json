@@ -1,0 +1,249 @@
+{
+  "bank_id": "postanska_rs",
+  "brand_name": "Poštanska Štedionica",
+  "official_name": "Banka Poštanska štedionica a.d. Beograd",
+  "maticni_broj": "07004893",
+  "website": "https://www.posted.co.rs",
+  "logo_color": "#F7A600",
+  "last_updated": "2026-05-30",
+  "kyc_matrix": [
+    {
+      "status": "non_resident",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "Белый картон (Prijava boravišta)"],
+      "red_flags": [
+        "Открывают счета туристам за 1–3 дня. Придётся заполнить 5–6 бумажных анкет в отделении."
+      ]
+    },
+    {
+      "status": "resident_less_1y",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "Белый картон / ID-карта ВНЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "resident_more_1y",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "permanent_resident",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["ID-карта ПМЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "citizen",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Лична карта (ID)"],
+      "red_flags": []
+    },
+    {
+      "status": "non_resident",
+      "legal_type": "business",
+      "is_available": false,
+      "probability": "blocked",
+      "required_docs": [],
+      "red_flags": ["Для открытия счёта ИП (Preduzetnik) требуется решение из реестра APR."]
+    },
+    {
+      "status": "resident_less_1y",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "Белый картон / ВНЖ", "Решение APR"],
+      "red_flags": [
+        "Самый лояльный банк для новых ИП. Не просят рабочие контракты или инвойсы для открытия счёта."
+      ]
+    },
+    {
+      "status": "resident_more_1y",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ", "Решение APR"],
+      "red_flags": []
+    },
+    {
+      "status": "permanent_resident",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["ID-карта ПМЖ", "Решение APR"],
+      "red_flags": []
+    },
+    {
+      "status": "citizen",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Лична карта (ID)", "Решение APR"],
+      "red_flags": []
+    }
+  ],
+  "products": [
+    {
+      "product_id": "ps_personal_racun_plus",
+      "name": "Račun Plus (Личный счёт)",
+      "category": "personal_account",
+      "is_multicurrency": true,
+      "supported_currencies": ["RSD", "EUR", "USD", "CHF"],
+      "maintenance_fee_rsd": 250,
+      "swift_in": {
+        "pct": 0,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": "Банк не берёт свою комиссию за входящий SWIFT. Банки-корреспонденты могут удержать 0–50 EUR."
+      },
+      "swift_out": {
+        "pct": 0.40,
+        "min_rsd": 2500,
+        "max_rsd": null,
+        "notes": null
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": true,
+        "garmin_pay": false,
+        "prenesi": true,
+        "ips_qr": true
+      },
+      "cards": {
+        "dina_notes": "Выдаётся бесплатно.",
+        "international": ["Mastercard", "Visa"]
+      }
+    },
+    {
+      "product_id": "ps_business_account",
+      "name": "Poslovni račun (ИП / Preduzetnik)",
+      "category": "business_account",
+      "is_multicurrency": false,
+      "supported_currencies": ["RSD", "EUR", "RUB"],
+      "maintenance_fee_rsd": 300,
+      "swift_in": {
+        "pct": 0,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": "USD не принимают. Рубли принимают без проблем."
+      },
+      "swift_out": {
+        "pct": 0.25,
+        "min_rsd": 5000,
+        "max_rsd": null,
+        "notes": null
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": true,
+        "garmin_pay": false,
+        "prenesi": false,
+        "ips_qr": true
+      },
+      "cards": {
+        "dina_notes": "Снятие наличных в банкоматах банка без комиссии.",
+        "international": ["Mastercard Business"]
+      }
+    },
+    {
+      "product_id": "ps_stednja_rsd",
+      "name": "Oročena štednja RSD",
+      "category": "savings_deposit",
+      "availability_note": "Доступен при наличии счёта в банке. Особая ставка для пенсионеров.",
+      "currencies": ["RSD"],
+      "terms": [
+        { "term_months": 3, "rate_pct": 5.50, "early_withdrawal_penalty_pct": 50 },
+        { "term_months": 6, "rate_pct": 7.00, "early_withdrawal_penalty_pct": 50 },
+        { "term_months": 12, "rate_pct": 8.50, "early_withdrawal_penalty_pct": 100 }
+      ],
+      "tax_on_interest_pct": 0,
+      "tax_note": "RSD-вклады освобождены от налога на процентный доход.",
+      "min_amount_rsd": 5000,
+      "is_available_non_resident": true,
+      "notes": "Одна из лучших ставок среди госбанков. Высокий валютный риск при конвертации в EUR."
+    },
+    {
+      "product_id": "ps_stednja_eur",
+      "name": "Oročena štednja EUR",
+      "category": "savings_deposit",
+      "availability_note": "Доступен при наличии EUR-счёта в банке.",
+      "currencies": ["EUR"],
+      "terms": [
+        { "term_months": 3, "rate_pct": 1.50, "early_withdrawal_penalty_pct": 50 },
+        { "term_months": 6, "rate_pct": 2.00, "early_withdrawal_penalty_pct": 50 },
+        { "term_months": 12, "rate_pct": 2.80, "early_withdrawal_penalty_pct": 100 }
+      ],
+      "tax_on_interest_pct": 15,
+      "tax_note": "EUR-вклады облагаются 15% налогом. Банк — налоговый агент.",
+      "min_amount_eur": 200,
+      "is_available_non_resident": false,
+      "notes": "Государственный банк — гарантия АДВ 50 000 EUR, плюс де-факто гарантия государства."
+    },
+    {
+      "product_id": "ps_bonds_gov",
+      "name": "Državne obveznice (Гособлигации)",
+      "category": "investment_bonds",
+      "access_method": "offline_branch",
+      "available_via_bank": true,
+      "min_residency_status": "resident_less_1y",
+      "instrument_type": "RS_GOV",
+      "currencies_available": ["RSD"],
+      "yield_rsd_approx_pct": 7.00,
+      "tax_on_coupon_pct": 0,
+      "tax_on_capital_gains_pct": 0,
+      "tax_note": "Купоны и прирост капитала по гособлигациям — 0% налог для физлиц.",
+      "entry_fee_pct": 0.30,
+      "custody_fee_pct_annual": 0.20,
+      "coupon_collection_fee_pct": 0.10,
+      "min_investment_rsd": 50000,
+      "access_note": "Государственный банк с прямым участием в аукционах НБС. Одна из самых низких комиссий.",
+      "red_flags": [],
+      "notes": "Только динарные облигации. EUR-облигации через этот банк недоступны."
+    },
+    {
+      "product_id": "ps_cash_loan",
+      "name": "Gotovinski kredit (Потребкредит)",
+      "category": "credit_consumer",
+      "min_residency_status": "resident_less_1y",
+      "available_for_foreigners": true,
+      "currency": "RSD",
+      "rate_approx_pct": 14.00,
+      "rate_type": "fixed",
+      "loan_term_months": [12, 24, 36, 48, 60],
+      "min_amount_eur": 500,
+      "max_amount_eur": 10000,
+      "income_requirement": "Справка о доходах или ИП-декларация",
+      "required_docs": ["ID ВНЖ", "Справка о доходах"],
+      "red_flags": [
+        "Максимальная сумма ограничена ~10 000 EUR эквивалент.",
+        "Ставка одна из самых высоких среди системных банков."
+      ],
+      "notes": "Государственный банк — лояльнее к нерезидентам по сравнению с частными банками."
+    },
+    {
+      "product_id": "ps_transfer_swift",
+      "name": "Международный перевод SWIFT",
+      "category": "transfer",
+      "available_directions": ["incoming", "outgoing"],
+      "outgoing_resident_restriction": "Физлицам с ВНЖ < 1 года — нужен инвойс для исходящего SWIFT",
+      "outgoing_resident_1y_plus": "Без документальных ограничений",
+      "fee_incoming_pct": 0,
+      "fee_incoming_min_rsd": null,
+      "fee_outgoing_pct": 0.40,
+      "fee_outgoing_min_rsd": 2500,
+      "fee_outgoing_max_rsd": null,
+      "supported_currencies": ["EUR", "USD", "CHF", "RUB"],
+      "notes": "Один из немногих банков, принимающих рублёвые переводы без проблем (актуально с 2024)."
+    }
+  ]
+}

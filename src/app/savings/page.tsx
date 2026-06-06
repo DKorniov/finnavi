@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { YieldComparator } from "../../components/Calculators/YieldComparator";
+import { YieldComparator } from "@/components/Calculators/YieldComparator";
 
 export const dynamic = 'force-dynamic';
 

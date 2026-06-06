@@ -1,0 +1,331 @@
+{
+  "bank_id": "raiffeisen_rs",
+  "brand_name": "Raiffeisen Bank",
+  "official_name": "Raiffeisen banka a.d. Beograd",
+  "maticni_broj": "17335600",
+  "website": "https://www.raiffeisenbank.rs",
+  "logo_color": "#FFCC00",
+  "last_updated": "2026-05-30",
+  "kyc_matrix": [
+    {
+      "status": "non_resident",
+      "legal_type": "individual",
+      "is_available": false,
+      "probability": "blocked",
+      "required_docs": [],
+      "red_flags": [
+        "Туристам и нерезидентам без ВНЖ счета не открывают.",
+        "Требуется трудовой договор с сербской компанией."
+      ]
+    },
+    {
+      "status": "resident_less_1y",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "medium",
+      "required_docs": [
+        "Загранпаспорт",
+        "ID-карта ВНЖ (или налепница + уверенье о бораваку)",
+        "Справка с работы / Выписка о доходах"
+      ],
+      "red_flags": [
+        "Могут навязать премиум-пакет (1000 RSD/мес), если нет зарплатного проекта."
+      ]
+    },
+    {
+      "status": "resident_more_1y",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "permanent_resident",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Загранпаспорт или ID-карта ПМЖ"],
+      "red_flags": []
+    },
+    {
+      "status": "citizen",
+      "legal_type": "individual",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Лична карта (ID)"],
+      "red_flags": []
+    },
+    {
+      "status": "non_resident",
+      "legal_type": "business",
+      "is_available": false,
+      "probability": "blocked",
+      "required_docs": [],
+      "red_flags": ["Нерезидентам бизнес-счета не открывают по внутреннему регламенту."]
+    },
+    {
+      "status": "resident_less_1y",
+      "legal_type": "business",
+      "is_available": false,
+      "probability": "blocked",
+      "required_docs": [],
+      "red_flags": [
+        "С марта 2024 года гражданам РФ/РБ массово отказывают в открытии счетов для ИП (Предузетник)."
+      ]
+    },
+    {
+      "status": "resident_more_1y",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "low",
+      "required_docs": [
+        "Загранпаспорт",
+        "ID-карта ВНЖ",
+        "Решение APR (выписка из реестра)"
+      ],
+      "red_flags": [
+        "Шанс на открытие ИП-счета есть только у тех, кто прожил в Сербии больше года, но отказы всё равно частые. Решение принимает головной офис."
+      ]
+    },
+    {
+      "status": "permanent_resident",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["ID-карта ПМЖ", "Решение APR"],
+      "red_flags": []
+    },
+    {
+      "status": "citizen",
+      "legal_type": "business",
+      "is_available": true,
+      "probability": "high",
+      "required_docs": ["Лична карта (ID)", "Решение APR"],
+      "red_flags": []
+    }
+  ],
+  "products": [
+    {
+      "product_id": "rf_iracun_personal",
+      "name": "iRačun (Личный счет)",
+      "category": "personal_account",
+      "is_multicurrency": true,
+      "supported_currencies": ["RSD", "EUR", "USD", "RUB"],
+      "maintenance_fee_rsd": 150,
+      "swift_in": {
+        "pct": 0.40,
+        "min_rsd": 500,
+        "max_rsd": null,
+        "notes": "Поступления в рублях (RUB) конвертируются автоматически."
+      },
+      "swift_out": {
+        "pct": 0.80,
+        "min_rsd": 1200,
+        "max_rsd": 40000,
+        "notes": "Отправка SWIFT нерезидентами в приложении заблокирована, нужно идти в отделение."
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": true,
+        "garmin_pay": true,
+        "prenesi": true,
+        "ips_qr": true
+      },
+      "cards": {
+        "dina_notes": "Выпускается обязательно.",
+        "international": ["Visa"]
+      }
+    },
+    {
+      "product_id": "rf_poslovni_racun",
+      "name": "Poslovni račun (ИП)",
+      "category": "business_account",
+      "is_multicurrency": true,
+      "supported_currencies": ["RSD", "EUR", "USD"],
+      "maintenance_fee_rsd": 450,
+      "swift_in": {
+        "pct": 0.40,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": null
+      },
+      "swift_out": {
+        "pct": 0.80,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": null
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": true,
+        "garmin_pay": true,
+        "prenesi": false,
+        "ips_qr": true
+      },
+      "cards": {
+        "dina_notes": "DinaCard Business обязательна.",
+        "international": ["Visa Business"]
+      }
+    },
+    {
+      "product_id": "rf_stednja_eur",
+      "name": "Oročena štednja EUR",
+      "category": "savings_deposit",
+      "availability_note": "Доступен для резидентов и нерезидентов при наличии текущего счёта в банке",
+      "currencies": ["EUR", "RSD"],
+      "terms": [
+        {
+          "term_months": 3,
+          "rate_pct": 1.80,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 6,
+          "rate_pct": 2.50,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 3.20,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 24,
+          "rate_pct": 3.50,
+          "early_withdrawal_penalty_pct": 100
+        }
+      ],
+      "tax_on_interest_pct": 15,
+      "tax_note": "EUR-вклады облагаются 15% налогом на процентный доход. Банк является налоговым агентом.",
+      "min_amount_eur": 100,
+      "is_available_non_resident": false,
+      "notes": "Автоматическое переоформление по истечении срока. Лимит гарантирования АДВ — 50 000 EUR."
+    },
+    {
+      "product_id": "rf_stednja_rsd",
+      "name": "Oročena štednja RSD",
+      "category": "savings_deposit",
+      "availability_note": "Доступен для резидентов при наличии текущего счёта",
+      "currencies": ["RSD"],
+      "terms": [
+        {
+          "term_months": 3,
+          "rate_pct": 5.00,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 6,
+          "rate_pct": 6.50,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 7.50,
+          "early_withdrawal_penalty_pct": 100
+        }
+      ],
+      "tax_on_interest_pct": 0,
+      "tax_note": "RSD-вклады освобождены от налога на процентный доход по действующему законодательству Сербии.",
+      "min_amount_eur": null,
+      "min_amount_rsd": 10000,
+      "is_available_non_resident": false,
+      "notes": "Высокая ставка, но несёт валютный риск при конвертации обратно в EUR."
+    },
+    {
+      "product_id": "rf_mortgage",
+      "name": "Stambeni kredit (Ипотека)",
+      "category": "credit_mortgage",
+      "min_residency_status": "resident_more_1y",
+      "available_for_foreigners": true,
+      "currency": "EUR",
+      "rate_type": "variable",
+      "rate_base": "EURIBOR 3M",
+      "rate_margin_pct": 2.90,
+      "rate_approx_total_pct": 5.80,
+      "loan_term_years": [10, 15, 20, 25, 30],
+      "max_ltv_pct": 70,
+      "min_down_payment_pct": 30,
+      "min_amount_eur": 15000,
+      "max_amount_eur": 500000,
+      "income_requirement": "Требуется подтверждённый доход в Сербии (зарплата или ИП-доход от 12 мес)",
+      "required_docs": [
+        "Загранпаспорт / ID ВНЖ",
+        "Налоговая декларация за последний год (ПОРЕСКА УПРАВА)",
+        "Выписки со счёта за 6 месяцев",
+        "Оценка недвижимости лицензированным оценщиком",
+        "Предварительный договор купли-продажи"
+      ],
+      "insurance_required": ["Imovinska osiguranje (страхование имущества)"],
+      "red_flags": [
+        "Для РФ/РБ паспортов требуется ВНЖ более 1 года + постоянный сербский доход.",
+        "Ставки переменные — привязаны к EURIBOR, возможен рост."
+      ],
+      "notes": "Ипотека в EUR с привязкой к EURIBOR. Максимальный LTV для иностранцев — 70%."
+    },
+    {
+      "product_id": "rf_cash_loan",
+      "name": "Gotovinski kredit (Потребкредит)",
+      "category": "credit_consumer",
+      "min_residency_status": "resident_more_1y",
+      "available_for_foreigners": true,
+      "currency": "RSD",
+      "rate_approx_pct": 12.50,
+      "rate_type": "fixed",
+      "loan_term_months": [12, 24, 36, 48, 60, 72, 84],
+      "min_amount_eur": 1000,
+      "max_amount_eur": 15000,
+      "income_requirement": "Зарплатный проект Raiffeisen или справка о доходах",
+      "required_docs": [
+        "ID ВНЖ или лична карта",
+        "Справка о доходах (потврда о заради)"
+      ],
+      "red_flags": [
+        "Реальная ставка с учётом страховки превышает 18% годовых.",
+        "Для нерезидентов и ВНЖ < 1 года — отказ."
+      ],
+      "notes": "Кредит в динарах, ставка фиксирована. Сумма до ~15 000 EUR эквивалент."
+    },
+    {
+      "product_id": "rf_bonds_gov",
+      "name": "Državne obveznice (Гособлигации Сербии)",
+      "category": "investment_bonds",
+      "access_method": "offline_branch",
+      "available_via_bank": true,
+      "min_residency_status": "resident_less_1y",
+      "instrument_type": "RS_GOV",
+      "currencies_available": ["EUR", "RSD"],
+      "yield_eur_approx_pct": 4.00,
+      "yield_rsd_approx_pct": 6.50,
+      "tax_on_coupon_pct": 0,
+      "tax_on_capital_gains_pct": 0,
+      "tax_note": "Купоны и прирост капитала по гособлигациям Сербии полностью освобождены от налогов для физических лиц.",
+      "entry_fee_pct": 1.00,
+      "custody_fee_pct_annual": 0.50,
+      "coupon_collection_fee_pct": 0.25,
+      "min_investment_eur": 1000,
+      "access_note": "Покупка только в отделении банка (BELEX / NBS аукционы). Онлайн-покупка недоступна.",
+      "red_flags": [
+        "Высокая комиссия за вход делает инвестицию убыточной на срок менее 2–3 лет.",
+        "В отделениях может не быть специалиста — лучше звонить заранее."
+      ],
+      "notes": "Минимальный срок аукционов: 2 года. Купоны выплачиваются раз в 6 месяцев."
+    },
+    {
+      "product_id": "rf_transfer_swift",
+      "name": "Международный перевод SWIFT",
+      "category": "transfer",
+      "available_directions": ["incoming", "outgoing"],
+      "outgoing_resident_restriction": "Нерезиденты и ВНЖ < 1 года — только в отделении, нужен инвойс/контракт",
+      "outgoing_resident_1y_plus": "Без документальных ограничений через приложение",
+      "fee_incoming_pct": 0.40,
+      "fee_incoming_min_rsd": 500,
+      "fee_outgoing_pct": 0.80,
+      "fee_outgoing_min_rsd": 1200,
+      "fee_outgoing_max_rsd": 40000,
+      "supported_currencies": ["EUR", "USD", "CHF", "GBP"],
+      "correspondent_banks": ["Raiffeisen Bank International (Vienna)"],
+      "notes": "USD-переводы конвертируются через корреспондентский счёт в RBI Vienna. Задержки до 3 рабочих дней."
+    }
+  ]
+}
