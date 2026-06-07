@@ -1,0 +1,60 @@
+{
+  "broker_id": "trading212",
+  "brand_name": "Trading 212",
+  "broker_type": "international",
+  "website": "https://www.trading212.com",
+  "logo_color": "#1DB954",
+  "last_updated": "2026-05-30",
+  "availability": [
+    { "status": "non_resident",       "is_available": true,  "probability": "high",   "notes": "Открывают стабильно. Один из самых лояльных брокеров к РФ паспортам." },
+    { "status": "resident_less_1y",   "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "resident_more_1y",   "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "permanent_resident", "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "citizen",            "is_available": true,  "probability": "high",   "notes": null }
+  ],
+  "instruments": {
+    "stocks": true,
+    "etf": true,
+    "bonds_world": false,
+    "bonds_serbia": false,
+    "options": false,
+    "crypto": false
+  },
+  "funding_routes": [
+    {
+      "method": "card",
+      "bank_name": "Любой сербский банк",
+      "currency": "EUR",
+      "success_rate": "high",
+      "fee_pct": 0,
+      "notes": "Пополнение картой Visa/Mastercard без комиссии. Самый быстрый способ — мгновенно."
+    },
+    {
+      "method": "sepa",
+      "bank_name": "Любой сербский банк",
+      "currency": "EUR",
+      "success_rate": "high",
+      "fee_pct": 0,
+      "notes": "SEPA-перевод без комиссии. 1-2 рабочих дня."
+    }
+  ],
+  "tax_serbia": {
+    "etf_capital_gains_pct": 15,
+    "etf_dividend_pct": 15,
+    "bonds_coupon_pct": null,
+    "bonds_capital_gains_pct": null,
+    "notes": "Отдельные облигации недоступны — только Bond ETF. Налог 15% на прирост капитала и дивиденды. Декларирование самостоятельное."
+  },
+  "pros": [
+    "Нулевая комиссия на сделки с акциями и ETF",
+    "Простой и понятный интерфейс — идеален для новичков",
+    "Пополнение картой без комиссии — мгновенно",
+    "Стабильная работа для РФ паспортов без сюрпризов",
+    "Регулятор FCA (Великобритания) + CySEC (Кипр)"
+  ],
+  "risks": [
+    "Отдельные облигации недоступны — только Bond ETF",
+    "Нет опционов и маржинальной торговли в классическом понимании",
+    "Ограниченный выбор инструментов по сравнению с IBKR"
+  ]
+}

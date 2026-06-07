@@ -1,0 +1,75 @@
+{
+  "broker_id": "ibkr",
+  "brand_name": "Interactive Brokers",
+  "broker_type": "international",
+  "website": "https://www.interactivebrokers.com",
+  "logo_color": "#E8001C",
+  "last_updated": "2026-05-30",
+  "availability": [
+    { "status": "non_resident",       "is_available": true,  "probability": "medium", "notes": "Открывают, но с конца 2024 участились запросы доп. документов для РФ паспортов" },
+    { "status": "resident_less_1y",   "is_available": true,  "probability": "medium", "notes": "Требуют подтверждение сербского адреса — utility bill или договор аренды" },
+    { "status": "resident_more_1y",   "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "permanent_resident", "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "citizen",            "is_available": true,  "probability": "high",   "notes": null }
+  ],
+  "instruments": {
+    "stocks": true,
+    "etf": true,
+    "bonds_world": true,
+    "bonds_serbia": false,
+    "options": true,
+    "crypto": false
+  },
+  "funding_routes": [
+    {
+      "method": "swift",
+      "bank_name": "Poštanska Štedionica",
+      "currency": "EUR",
+      "success_rate": "high",
+      "fee_pct": 0.40,
+      "notes": "Наиболее стабильный маршрут по отзывам комьюнити. Проходит без вопросов."
+    },
+    {
+      "method": "swift",
+      "bank_name": "Alta Banka",
+      "currency": "EUR",
+      "success_rate": "high",
+      "fee_pct": 0.40,
+      "notes": "Стабильно проходит. Низкая комиссия — один из лучших вариантов."
+    },
+    {
+      "method": "swift",
+      "bank_name": "Raiffeisen Bank",
+      "currency": "EUR",
+      "success_rate": "medium",
+      "fee_pct": 0.80,
+      "notes": "Проходит, но могут запросить письмо о назначении платежа. Высокая комиссия."
+    },
+    {
+      "method": "swift",
+      "bank_name": "OTP Banka",
+      "currency": "EUR",
+      "success_rate": "medium",
+      "fee_pct": 1.00,
+      "notes": "Бывают задержки. Самая высокая комиссия из доступных маршрутов."
+    }
+  ],
+  "tax_serbia": {
+    "etf_capital_gains_pct": 15,
+    "etf_dividend_pct": 15,
+    "bonds_coupon_pct": 15,
+    "bonds_capital_gains_pct": 0,
+    "notes": "Иностранные активы через IBKR облагаются 15% CGT и 15% на дивиденды. Декларирование самостоятельное через Poreska Uprava в течение 30 дней после получения дохода."
+  },
+  "pros": [
+    "Полный доступ к мировым рынкам: акции, ETF, облигации 135+ бирж",
+    "Низкие комиссии на сделки — от $0.35 за ордер",
+    "Страховка SIPC до $500 000",
+    "Маржинальная торговля с низкими ставками"
+  ],
+  "risks": [
+    "С конца 2024 участились случаи заморозки счетов граждан РФ — требуют подтверждения сербского резидентства",
+    "Возможное ограничение доступа к российским активам в портфеле",
+    "Сложный интерфейс — не подходит новичкам"
+  ]
+}

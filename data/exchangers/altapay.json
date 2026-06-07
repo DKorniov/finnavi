@@ -1,0 +1,21 @@
+{
+  "exchanger_id": "altapay_rs",
+  "brand_name": "Alta Pay Menjačnica",
+  "website": "https://altapay.rs/alta-menjacnica/",
+  "city": "Beograd",
+  "last_updated": "2026-05-30",
+  "is_stub": true,
+  "stub_note": "Курсы валют — заглушка. Будет заменено на API или ежедневный парсинг.",
+  "rates": [
+    { "currency": "USD", "buy": 107.50, "sell": 109.20 },
+    { "currency": "EUR", "buy": 116.80, "sell": 118.50 },
+    { "currency": "CHF", "buy": 119.00, "sell": 121.00 },
+    { "currency": "GBP", "buy": 135.00, "sell": 137.50 }
+  ],
+  "pros": [
+    "Официально лицензированная мењачница НБС",
+    "Принимают наличные RUB без проблем",
+    "Онлайн-бронирование курса по телефону"
+  ],
+  "working_hours": "Пн–Пт 09:00–18:00, Сб 09:00–14:00"
+}

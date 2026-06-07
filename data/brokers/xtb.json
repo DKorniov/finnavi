@@ -1,0 +1,60 @@
+{
+  "broker_id": "xtb",
+  "brand_name": "XTB",
+  "broker_type": "international",
+  "website": "https://www.xtb.com",
+  "logo_color": "#FF5733",
+  "last_updated": "2026-05-30",
+  "availability": [
+    { "status": "non_resident",       "is_available": true,  "probability": "high",   "notes": "Открывают стабильно для РФ паспортов с сербским адресом." },
+    { "status": "resident_less_1y",   "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "resident_more_1y",   "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "permanent_resident", "is_available": true,  "probability": "high",   "notes": null },
+    { "status": "citizen",            "is_available": true,  "probability": "high",   "notes": null }
+  ],
+  "instruments": {
+    "stocks": true,
+    "etf": true,
+    "bonds_world": false,
+    "bonds_serbia": false,
+    "options": false,
+    "crypto": true
+  },
+  "funding_routes": [
+    {
+      "method": "card",
+      "bank_name": "Любой сербский банк",
+      "currency": "EUR",
+      "success_rate": "high",
+      "fee_pct": 0,
+      "notes": "Пополнение картой без комиссии. Мгновенно."
+    },
+    {
+      "method": "sepa",
+      "bank_name": "Любой сербский банк",
+      "currency": "EUR",
+      "success_rate": "high",
+      "fee_pct": 0,
+      "notes": "SEPA без комиссии. 1-2 рабочих дня."
+    }
+  ],
+  "tax_serbia": {
+    "etf_capital_gains_pct": 15,
+    "etf_dividend_pct": 15,
+    "bonds_coupon_pct": null,
+    "bonds_capital_gains_pct": null,
+    "notes": "Облигации недоступны — только CFD и акции/ETF. Налог 15% CGT и дивиденды. Декларирование самостоятельное."
+  },
+  "pros": [
+    "До 100 000 EUR в месяц — нулевая комиссия на акции и ETF",
+    "Отличное мобильное приложение и обучающие материалы",
+    "Регулятор KNF (Польша) — надёжный европейский регулятор",
+    "Доступна торговля криптовалютой (CFD)",
+    "Стабильная работа для РФ паспортов"
+  ],
+  "risks": [
+    "Облигации недоступны — только CFD инструменты",
+    "После 100 000 EUR оборота в месяц комиссия 0.2%",
+    "CFD на крипту — это не реальное владение активом"
+  ]
+}

@@ -5,10 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useResidency } from "@/components/ResidencyProvider";
 import { BankMatrix } from "@/components/Accounts/BankMatrix";
+import { InvestTab } from "@/components/Invest/InvestTab";
 import { TaxOptimizer } from "@/components/Taxes/TaxOptimizer";
 import { VerifiedExperts } from "@/components/Services/VerifiedExperts";
 import type { TransformedMatrixItem, ResidencyStatus, BankProduct } from "@/types/bank";
 import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
+import type { BrokerJSON } from "@/types/broker";
 
 // Выводим тип категории прямо из BankProduct — не создаём новый тип
 // 'taxes' и 'services' — рендерятся inline как обычные вкладки
@@ -56,9 +58,10 @@ interface MainTabsClientProps {
   currentStatus: ResidencyStatus;
   taxRules: TaxRuleWithCategory[];
   serviceProviders: ServiceProvider[];
+  brokers: BrokerJSON[];
 }
 
-export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProviders }: MainTabsClientProps) {
+export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProviders, brokers }: MainTabsClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { legalType } = useResidency();
@@ -115,6 +118,13 @@ export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProvi
         <TaxOptimizer initialRules={taxRules} />
       ) : activeTab === 'services' ? (
         <VerifiedExperts providers={serviceProviders} />
+      ) : activeTab === 'investment_bonds' ? (
+        <InvestTab
+          bondItems={allItems.filter(i => i.products.category === 'investment_bonds')}
+          savingsItems={allItems.filter(i => i.products.category === 'savings_deposit')}
+          brokers={brokers}
+          currentStatus={currentStatus}
+        />
       ) : visibleItems.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200">
           <p className="text-slate-400 text-sm">Нет данных для выбранного статуса</p>

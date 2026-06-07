@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import { getMatrixItemsForStatus } from "@/lib/data/banks";
+import { getAllBrokers } from "@/lib/data/brokers";
 import { MainTabsClient } from "@/components/MainTabsClient";
 import type { ResidencyStatus, LegalType } from "@/types/bank";
 import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
@@ -13,8 +14,11 @@ export default async function HomePage() {
   const status = (cookieStore.get("expat_status")?.value || "non_resident") as ResidencyStatus;
   const legalType = (cookieStore.get("expat_legal_type")?.value || "individual") as LegalType;
 
-  // JSON-данные банков
-  const allItems = await getMatrixItemsForStatus(status, legalType);
+  // JSON-данные банков и брокеров
+  const [allItems, brokers] = await Promise.all([
+    getMatrixItemsForStatus(status, legalType),
+    getAllBrokers(),
+  ]);
 
   // Supabase-данные для вкладок Налоги и Услуги
   let taxRules: TaxRuleWithCategory[] = [];
@@ -50,6 +54,7 @@ export default async function HomePage() {
         currentStatus={status}
         taxRules={taxRules}
         serviceProviders={serviceProviders}
+        brokers={brokers}
       />
     </div>
   );
