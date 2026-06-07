@@ -1,3 +1,5 @@
+// src/app/savings/page.tsx
+
 import { createClient } from "@supabase/supabase-js";
 import { YieldComparator } from "@/components/Calculators/YieldComparator";
 

@@ -1,3 +1,4 @@
+// src/app/taxes/page.tsx
 import { createClient } from "@supabase/supabase-js";
 import { TaxOptimizer } from "@/components/Taxes/TaxOptimizer";
 import type { TaxRuleWithCategory } from "@/types/database";

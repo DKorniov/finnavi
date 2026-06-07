@@ -12,42 +12,60 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "medium",
-      "required_docs": ["Загранпаспорт", "Белый картон"],
+      "required_docs": [
+        "Загранпаспорт",
+        "Белый картон"
+      ],
       "red_flags": [
         "Пополнение наличными только в отделении по паспорту. Бывают задержки входящих SWIFT-переводов."
-      ]
+      ],
+      "blocked_reasons": []
     },
     {
       "status": "resident_less_1y",
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Загранпаспорт", "Белый картон / ID-карта ВНЖ"],
-      "red_flags": []
+      "required_docs": [
+        "Загранпаспорт",
+        "Белый картон / ID-карта ВНЖ"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     },
     {
       "status": "resident_more_1y",
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ"],
-      "red_flags": []
+      "required_docs": [
+        "Загранпаспорт",
+        "ID-карта ВНЖ"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     },
     {
       "status": "permanent_resident",
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["ID-карта ПМЖ"],
-      "red_flags": []
+      "required_docs": [
+        "ID-карта ПМЖ"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     },
     {
       "status": "citizen",
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Лична карта (ID)"],
-      "red_flags": []
+      "required_docs": [
+        "Лична карта (ID)"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     },
     {
       "status": "non_resident",
@@ -55,41 +73,65 @@
       "is_available": false,
       "probability": "blocked",
       "required_docs": [],
-      "red_flags": ["Требуется местная регистрация ИП в APR."]
+      "red_flags": [
+        "Требуется местная регистрация ИП в APR."
+      ],
+      "blocked_reasons": [
+        "Zakon o privrednim društvima (čl. 3): регистрация ИП требует подтверждённого адреса проживания в Сербии — белый картон не принимается",
+        "Внутренняя политика банка: для открытия бизнес-счёта обязательна регистрация в APR, недоступная нерезидентам"
+      ]
     },
     {
       "status": "resident_less_1y",
       "legal_type": "business",
       "is_available": true,
       "probability": "medium",
-      "required_docs": ["Загранпаспорт", "Белый картон / ВНЖ", "Решение APR"],
+      "required_docs": [
+        "Загранпаспорт",
+        "Белый картон / ВНЖ",
+        "Решение APR"
+      ],
       "red_flags": [
         "Могут потребовать договор аренды квартиры и договор с сербским бухгалтером."
-      ]
+      ],
+      "blocked_reasons": []
     },
     {
       "status": "resident_more_1y",
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ", "Решение APR"],
-      "red_flags": []
+      "required_docs": [
+        "Загранпаспорт",
+        "ID-карта ВНЖ",
+        "Решение APR"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     },
     {
       "status": "permanent_resident",
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["ID ПМЖ", "Решение APR"],
-      "red_flags": []
+      "required_docs": [
+        "ID ПМЖ",
+        "Решение APR"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     },
     {
       "status": "citizen",
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Лична карта", "Решение APR"],
-      "red_flags": []
+      "required_docs": [
+        "Лична карта",
+        "Решение APR"
+      ],
+      "red_flags": [],
+      "blocked_reasons": []
     }
   ],
   "products": [
@@ -98,16 +140,21 @@
       "name": "Platni račun za fizička lica",
       "category": "personal_account",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR", "RUB", "CNY"],
+      "supported_currencies": [
+        "RSD",
+        "EUR",
+        "RUB",
+        "CNY"
+      ],
       "maintenance_fee_rsd": 350,
       "swift_in": {
-        "pct": 0.20,
+        "pct": 0.2,
         "min_rsd": null,
         "max_rsd": null,
         "notes": "USD не принимают. Рубли и юани принимают без проблем — уникальная особенность банка."
       },
       "swift_out": {
-        "pct": 0.40,
+        "pct": 0.4,
         "min_rsd": 1500,
         "max_rsd": null,
         "notes": null
@@ -117,22 +164,34 @@
         "google_pay": true,
         "garmin_pay": false,
         "prenesi": false,
-        "ips_qr": true
+        "ips_qr": true,
+        "contactless": true
       },
       "cards": {
         "dina_notes": "Используется для снятия в банкоматах банка.",
-        "international": ["Visa", "Mastercard"]
-      }
+        "international": [
+          "Visa",
+          "Mastercard"
+        ]
+      },
+      "card_issue_days": "5–7 рабочих дней",
+      "cashback": "Нет",
+      "bonuses": "Скидки у партнёров банка (рестораны и магазины в Белграде)"
     },
     {
       "product_id": "alta_business",
       "name": "Račun za privredu (ИП)",
       "category": "business_account",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR", "RUB", "CNY"],
+      "supported_currencies": [
+        "RSD",
+        "EUR",
+        "RUB",
+        "CNY"
+      ],
       "maintenance_fee_rsd": 500,
       "swift_in": {
-        "pct": 0.20,
+        "pct": 0.2,
         "min_rsd": null,
         "max_rsd": null,
         "notes": "Конвертация валют с Payoneer / Deel может занимать до 3-х дней."
@@ -148,22 +207,43 @@
         "google_pay": true,
         "garmin_pay": false,
         "prenesi": false,
-        "ips_qr": true
+        "ips_qr": true,
+        "contactless": true
       },
       "cards": {
         "dina_notes": "Картой юрлица нельзя платить за границей физически (только онлайн и по Сербии).",
-        "international": ["Visa", "Mastercard"]
-      }
+        "international": [
+          "Visa",
+          "Mastercard"
+        ]
+      },
+      "card_issue_days": "7–10 рабочих дней",
+      "cashback": "Нет",
+      "bonuses": "Бесплатное подключение интернет-банкинга и API для бухгалтерских систем"
     },
     {
       "product_id": "alta_stednja_rsd",
       "name": "Oročena štednja RSD",
       "category": "savings_deposit",
-      "currencies": ["RSD"],
+      "currencies": [
+        "RSD"
+      ],
       "terms": [
-        { "term_months": 3, "rate_pct": 4.50, "early_withdrawal_penalty_pct": 50 },
-        { "term_months": 6, "rate_pct": 6.00, "early_withdrawal_penalty_pct": 50 },
-        { "term_months": 12, "rate_pct": 7.00, "early_withdrawal_penalty_pct": 100 }
+        {
+          "term_months": 3,
+          "rate_pct": 4.5,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 6,
+          "rate_pct": 6.0,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 7.0,
+          "early_withdrawal_penalty_pct": 100
+        }
       ],
       "tax_on_interest_pct": 0,
       "tax_note": "RSD-вклады — 0% налог.",
@@ -175,10 +255,21 @@
       "product_id": "alta_stednja_eur",
       "name": "Oročena štednja EUR",
       "category": "savings_deposit",
-      "currencies": ["EUR", "RUB"],
+      "currencies": [
+        "EUR",
+        "RUB"
+      ],
       "terms": [
-        { "term_months": 3, "rate_pct": 1.50, "early_withdrawal_penalty_pct": 50 },
-        { "term_months": 12, "rate_pct": 2.80, "early_withdrawal_penalty_pct": 100 }
+        {
+          "term_months": 3,
+          "rate_pct": 1.5,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 2.8,
+          "early_withdrawal_penalty_pct": 100
+        }
       ],
       "tax_on_interest_pct": 15,
       "tax_note": "15% налог на EUR-доход. RUB-вклады — уточнять отдельно.",
@@ -190,15 +281,23 @@
       "product_id": "alta_transfer_swift",
       "name": "Международный перевод SWIFT / SEPA",
       "category": "transfer",
-      "available_directions": ["incoming", "outgoing"],
+      "available_directions": [
+        "incoming",
+        "outgoing"
+      ],
       "outgoing_resident_restriction": "Нерезиденты — только в кассе",
       "outgoing_resident_1y_plus": "Через интернет-банк без ограничений",
-      "fee_incoming_pct": 0.20,
+      "fee_incoming_pct": 0.2,
       "fee_incoming_min_rsd": null,
-      "fee_outgoing_pct": 0.40,
+      "fee_outgoing_pct": 0.4,
       "fee_outgoing_min_rsd": 1500,
       "fee_outgoing_max_rsd": null,
-      "supported_currencies": ["EUR", "RUB", "CNY", "USD"],
+      "supported_currencies": [
+        "EUR",
+        "RUB",
+        "CNY",
+        "USD"
+      ],
       "notes": "Лучший выбор для тех, кто получает доходы в рублях или юанях. Уникальная позиция на сербском рынке."
     },
     {
@@ -208,13 +307,22 @@
       "min_residency_status": "resident_less_1y",
       "available_for_foreigners": true,
       "currency": "RSD",
-      "rate_approx_pct": 15.50,
+      "rate_approx_pct": 15.5,
       "rate_type": "fixed",
-      "loan_term_months": [12, 24, 36, 48, 60],
+      "loan_term_months": [
+        12,
+        24,
+        36,
+        48,
+        60
+      ],
       "min_amount_eur": 500,
       "max_amount_eur": 8000,
       "income_requirement": "Справка о доходах или ИП-декларация. Для иностранцев — возможен созаёмщик.",
-      "required_docs": ["ID ВНЖ", "Справка о доходах"],
+      "required_docs": [
+        "ID ВНЖ",
+        "Справка о доходах"
+      ],
       "red_flags": [
         "Высокая ставка из-за повышенного риск-профиля малого банка.",
         "Небольшие суммы кредитования."

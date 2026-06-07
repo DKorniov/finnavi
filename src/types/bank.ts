@@ -8,7 +8,8 @@ export interface KYCRule {
   is_available: boolean;
   probability: Probability;
   required_docs: string[];
-  red_flags: string[]; // Инсайды и причины отказов
+  red_flags: string[];
+  blocked_reasons?: string[]; // Правовые причины отказа (валютный контроль, AML и т.д.)
 }
 
 export interface FeeStructure {
@@ -41,11 +42,16 @@ export interface BankProduct {
     garmin_pay: boolean;
     prenesi: boolean;
     ips_qr: boolean;
+    contactless?: boolean;
   };
   cards?: {
     dina_notes: string;
     international: string[];
   };
+  // Новые поля для карточки и drawer
+  card_issue_days?: string;     // "До 7 рабочих дней"
+  cashback?: string;            // "До 5% на топливо" | "Нет"
+  bonuses?: string;             // Описание бонусной программы
 
   // savings_deposit
   terms?: DepositTerm[];
@@ -105,6 +111,7 @@ export interface BankJSON {
   official_name: string;
   maticni_broj: string;
   website: string;
+  logo_color?: string; // hex цвет бренда, напр. "#E31837"
   kyc_matrix: KYCRule[];
   products: BankProduct[];
   last_updated: string;
@@ -119,10 +126,12 @@ export interface TransformedMatrixItem {
   probability: Probability;
   kyc_requirements: string[];
   red_flags: string[];
+  blocked_reasons: string[];   // причины отказа из kyc_matrix
   products: BankProduct & {
     banks: {
       name: string;
       official_site: string | null;
+      logo_color: string | null;
     };
   };
 }

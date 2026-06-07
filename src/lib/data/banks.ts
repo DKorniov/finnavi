@@ -39,36 +39,32 @@ export async function getProductWithBankData(productId: string): Promise<{ bank:
   return null;
 }
 
-// Категории, которые относятся к счетам — фильтруются по legalType
 const ACCOUNT_CATEGORIES = ['personal_account', 'business_account'] as const;
 
 export async function getMatrixItemsForStatus(
-  status: ResidencyStatus, 
+  status: ResidencyStatus,
   legalType: LegalType
 ): Promise<TransformedMatrixItem[]> {
   const banks = await getAllBanks();
   const items: TransformedMatrixItem[] = [];
 
   for (const bank of banks) {
-    // Ищем точечное правило под выбранные куки
     let kycRule = bank.kyc_matrix?.find(
       rule => rule.status === status && rule.legal_type === legalType
     );
-    
-    // 🔥 ГРАМОТНЫЙ ПЕРЕХВАТ: Если комбинации нет в JSON (например, Нерезидент + ИП)
+
     if (!kycRule) {
       if (status === 'citizen' || status === 'permanent_resident') {
-        // Заглушка для ПМЖ/Граждан — им доступно всё
         kycRule = {
           status,
           legal_type: legalType,
           is_available: true,
           probability: 'high',
           required_docs: legalType === 'business' ? ['Лична карта (ID)', 'Rešenje APR'] : ['Лична карта (ID)'],
-          red_flags: []
+          red_flags: [],
+          blocked_reasons: [],
         };
       } else {
-        // Для Туристов и ВНЖ — не скрываем банк, а выводим карточку с явным отказом комплаенса!
         kycRule = {
           status,
           legal_type: legalType,
@@ -77,25 +73,22 @@ export async function getMatrixItemsForStatus(
           required_docs: [],
           red_flags: [
             legalType === 'business'
-              ? `Комплаенс ${bank.brand_name} полностью блокирует открытие счетов для ИП/ООО лицам со статусом нерезидента или первичного ВНЖ без сербских контрактов.`
-              : `Открытие личных девизных счетов для физлиц в ${bank.brand_name} временно ограничено под данный тип боравака.`
-          ]
+              ? `Комплаенс ${bank.brand_name} блокирует открытие счетов для ИП/ООО лицам без подтверждённого резидентства.`
+              : `Открытие счетов для физлиц в ${bank.brand_name} ограничено для данного типа боравака.`,
+          ],
+          blocked_reasons: [],
         };
       }
     }
 
-    // Распределяем продукты по категориям
     for (const product of bank.products) {
       const isAccountProduct = (ACCOUNT_CATEGORIES as readonly string[]).includes(product.category);
 
       if (isAccountProduct) {
-        // Счета: фильтруем по legalType как раньше
         const isBusinessProduct = product.category === 'business_account';
         const isBusinessUser = legalType === 'business';
         if (isBusinessProduct !== isBusinessUser) continue;
       }
-      // Остальные категории (savings_deposit, investment_bonds, credit_*, transfer)
-      // показываем всегда — они не зависят от legalType
 
       items.push({
         id: `${bank.bank_id}_${product.product_id}`,
@@ -105,13 +98,15 @@ export async function getMatrixItemsForStatus(
         probability: kycRule.probability,
         kyc_requirements: kycRule.required_docs,
         red_flags: kycRule.red_flags,
+        blocked_reasons: kycRule.blocked_reasons ?? [],
         products: {
           ...product,
           banks: {
             name: bank.brand_name,
-            official_site: bank.website
-          }
-        }
+            official_site: bank.website,
+            logo_color: bank.logo_color ?? null,
+          },
+        },
       });
     }
   }

@@ -1,156 +1,256 @@
 // src/components/Accounts/BankMatrix.tsx
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useResidency } from "@/components/ResidencyProvider";
+import { ProductDrawer } from "@/components/Accounts/ProductDrawer";
 import type { TransformedMatrixItem, Probability } from "@/types/bank";
 
 interface BankMatrixProps {
   initialItems: TransformedMatrixItem[];
 }
 
-function translateProbability(probability: Probability, isAvailable: boolean): string {
-  if (!isAvailable || probability === 'blocked') return "Отказ (Не открывают)";
+// ─── Вспомогательные функции ────────────────────────────────────────────────
+
+function probLabel(probability: Probability, isAvailable: boolean): string {
+  if (!isAvailable || probability === 'blocked') return "Не открывают";
   if (probability === 'high') return "Высокая вероятность";
-  if (probability === 'medium') return "50/50 (Сербский рандом)";
-  if (probability === 'low') return "Сложно (Нужен помогатор)";
-  return "Уточняйте в банке";
+  if (probability === 'medium') return "Сербский рандом";
+  return "Сложно открыть";
 }
 
-function getBadgeStyles(probability: Probability, isAvailable: boolean): string {
-  if (!isAvailable || probability === 'blocked') return "bg-red-50 text-red-700 border-red-200";
-  if (probability === 'high') return "bg-emerald-50 text-emerald-700 border-emerald-200";
-  if (probability === 'medium') return "bg-amber-50 text-amber-700 border-amber-200";
-  if (probability === 'low') return "bg-orange-50 text-orange-700 border-orange-200";
-  return "bg-slate-50 text-slate-700 border-slate-200";
+function probBadgeClass(probability: Probability, isAvailable: boolean): string {
+  if (!isAvailable || probability === 'blocked') return "bg-red-50 text-red-700";
+  if (probability === 'high') return "bg-emerald-50 text-emerald-700";
+  if (probability === 'medium') return "bg-amber-50 text-amber-700";
+  return "bg-orange-50 text-orange-700";
 }
+
+// ─── Типы фильтров ──────────────────────────────────────────────────────────
+
+type CardFilter = 'all' | 'visa' | 'mastercard';
+type FeatureFilter = 'all' | 'apple_pay' | 'free_swift_in' | 'rub' | 'garmin';
+
+// ─── Компонент тега ─────────────────────────────────────────────────────────
+
+function Tag({ children, variant }: { children: React.ReactNode; variant: 'card' | 'feature' | 'currency' }) {
+  const cls = {
+    card: 'bg-blue-50 text-blue-800',
+    feature: 'bg-emerald-50 text-emerald-800',
+    currency: 'bg-slate-100 text-slate-600',
+  }[variant];
+  return (
+    <span className={`text-[11px] px-2 py-0.5 rounded-[4px] whitespace-nowrap ${cls}`}>
+      {children}
+    </span>
+  );
+}
+
+// ─── Пустое состояние ───────────────────────────────────────────────────────
+
+function EmptyState() {
+  return (
+    <div className="text-center py-16 px-4 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
+      <svg className="w-10 h-10 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <h3 className="text-base font-semibold text-slate-700">Нет продуктов под выбранные фильтры</h3>
+      <p className="text-sm text-slate-400 mt-1">Измените параметры фильтрации</p>
+    </div>
+  );
+}
+
+// ─── Основной компонент ─────────────────────────────────────────────────────
 
 export function BankMatrix({ initialItems }: BankMatrixProps) {
-  const { legalType } = useResidency(); 
+  const [filterCard, setFilterCard] = useState<CardFilter>('all');
+  const [filterFeat, setFilterFeat] = useState<FeatureFilter>('all');
+  const [drawerItem, setDrawerItem] = useState<TransformedMatrixItem | null>(null);
 
-  // Сортировка и группировка по банку на основе строго типизированного массива
-  const groupedByBank = useMemo(() => {
-    return initialItems.reduce((acc, item) => {
-      const bankName = item.products.banks.name;
-      if (!acc[bankName]) {
-        acc[bankName] = [];
+  // Фильтрация
+  const filteredItems = useMemo(() => {
+    return initialItems.filter(({ products: p }) => {
+      if (filterCard === 'visa') {
+        const cards = (p.cards?.international ?? []).map(c => c.toLowerCase());
+        if (!cards.some(c => c.includes('visa'))) return false;
       }
-      acc[bankName].push(item);
-      return acc;
-    }, {} as Record<string, TransformedMatrixItem[]>);
-  }, [initialItems]);
+      if (filterCard === 'mastercard') {
+        const cards = (p.cards?.international ?? []).map(c => c.toLowerCase());
+        if (!cards.some(c => c.includes('mastercard'))) return false;
+      }
+      if (filterFeat === 'apple_pay' && !p.features?.apple_pay) return false;
+      if (filterFeat === 'free_swift_in' && p.swift_in?.pct !== 0) return false;
+      if (filterFeat === 'rub' && !(p.supported_currencies ?? []).includes('RUB')) return false;
+      if (filterFeat === 'garmin' && !p.features?.garmin_pay) return false;
+      return true;
+    });
+  }, [initialItems, filterCard, filterFeat]);
 
-  if (initialItems.length === 0) {
-    return (
-      <div className="text-center py-16 px-4 bg-slate-50 rounded-2xl border border-slate-200 border-dashed">
-        <svg className="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <h3 className="text-lg font-bold text-slate-800">Нет доступных предложений</h3>
-        <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">
-          Для выбранных критериев продукты в базе данных не найдены. Измените фильтр резидентства.
-        </p>
-      </div>
-    );
-  }
+  const isBusiness = initialItems[0]?.products.category === 'business_account';
+
+  // ─── Рендер ─────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-12 font-sans">
-      {Object.entries(groupedByBank).map(([bankName, items]) => (
-        <section key={bankName} className="border border-slate-100 rounded-2xl p-6 bg-white shadow-xs">
-          
-          {/* Шапка Банка */}
-          <div className="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg">
-                {bankName.charAt(0)}
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">{bankName}</h2>
-                <span className="text-xs font-medium text-slate-400">
-                  Официальный сайт: {items[0]?.products.banks.official_site || "NBS регистр"}
-                </span>
-              </div>
-            </div>
-            
-            <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
-              {items.length} {items.length === 1 ? 'продукт' : 'продукта'}
-            </span>
-          </div>
+    <div className="font-sans">
 
-          {/* Карточки доступных продуктов внутри банка */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {items.map((item) => {
-              const product = item.products;
-              const isBlocked = !item.is_available || item.probability === 'blocked';
+      {/* Фильтры */}
+      <div className="flex flex-wrap gap-2 mb-5 items-center">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Карта:</span>
+        {([ ['all', 'Любая'], ['visa', 'Visa'], ['mastercard', 'Mastercard'] ] as const).map(([val, label]) => (
+          <button
+            key={val}
+            onClick={() => setFilterCard(val)}
+            className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+              filterCard === val
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
 
-              return (
-                <div 
-                  key={item.id} 
-                  className={`flex flex-col border rounded-xl overflow-hidden transition-all duration-200 bg-white ${
-                    isBlocked ? 'border-red-100 bg-red-50/20 opacity-75' : 'border-slate-200 hover:border-slate-300 hover:shadow-xs'
-                  }`}
-                >
-                  {/* Контент тарифа */}
-                  <div className="p-5 flex-grow space-y-4">
-                    <div className="flex justify-between items-start gap-2">
-                      <div>
-                        <h3 className="font-bold text-slate-900 text-base leading-snug">{product.name}</h3>
-                        <p className="text-[11px] font-semibold text-slate-400 uppercase mt-0.5">
-                          {product.category === 'business_account' ? 'Для бизнеса / ИП' : 'Личный счет'}
-                        </p>
-                      </div>
-                    </div>
+        <div className="w-px h-4 bg-slate-200 mx-1" />
 
-                    {/* Статус KYC бейджа */}
-                    <div>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wide ${getBadgeStyles(item.probability, item.is_available)}`}>
-                        {translateProbability(item.probability, item.is_available)}
-                      </span>
-                    </div>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Особенности:</span>
+        {([
+          ['all', 'Любые'],
+          ['apple_pay', 'Apple Pay'],
+          ['free_swift_in', 'SWIFT in 0%'],
+          ['rub', 'Счёт в рублях'],
+          ...(!isBusiness ? [['garmin', 'Garmin Pay']] as const : []),
+        ] as const).map(([val, label]) => (
+          <button
+            key={val}
+            onClick={() => setFilterFeat(val as FeatureFilter)}
+            className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+              filterFeat === val
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-                    {/* Краткие метрики */}
-                    <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
-                      <div className="flex justify-between">
-                        <span className="text-slate-500">Ведение счета:</span>
-                        <span className="font-bold text-slate-800">
-                          {product.maintenance_fee_rsd === 0 
-                            ? "Бесплатно" 
-                            : product.maintenance_fee_rsd 
-                              ? `${product.maintenance_fee_rsd} RSD` 
-                              : "Нет данных"}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-500">Входящий SWIFT:</span>
-                        <span className="font-bold text-slate-800">
-                          {product.swift_in?.pct !== undefined ? `${product.swift_in.pct}%` : "Нет данных"}
-                        </span>
-                      </div>
-                    </div>
+      {/* Счётчик */}
+      <p className="text-xs text-slate-400 mb-4">
+        Найдено: {filteredItems.length} продукт{filteredItems.length === 1 ? '' : filteredItems.length < 5 ? 'а' : 'ов'}
+      </p>
+
+      {filteredItems.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div className="flex flex-col gap-3">
+          {filteredItems.map((item) => {
+            const p = item.products;
+            const isBlocked = !item.is_available || item.probability === 'blocked';
+            const logoColor = p.banks.logo_color ?? '#1e293b';
+            const logoTextColor = logoColor === '#FFCC00' ? '#1e293b' : '#ffffff';
+            const logoInitials = p.banks.name.slice(0, 2).toUpperCase();
+
+            // Теги
+            const tags: React.ReactNode[] = [];
+            (p.cards?.international ?? []).forEach(c => (
+              tags.push(<Tag key={`card-${c}`} variant="card">{c}</Tag>)
+            ));
+            tags.push(<Tag key="dina" variant="card">DinaCard</Tag>);
+
+            if (p.is_multicurrency) {
+              tags.push(<Tag key="multi" variant="currency">Мультивалютный</Tag>);
+            } else {
+              if ((p.supported_currencies ?? []).includes('RUB')) tags.push(<Tag key="rub" variant="currency">RUB счёт</Tag>);
+              if ((p.supported_currencies ?? []).includes('CNY')) tags.push(<Tag key="cny" variant="currency">CNY счёт</Tag>);
+            }
+
+            if (p.features?.apple_pay) tags.push(<Tag key="apple" variant="feature">Apple Pay</Tag>);
+            if (p.features?.google_pay) tags.push(<Tag key="google" variant="feature">Google Pay</Tag>);
+            if (p.features?.garmin_pay) tags.push(<Tag key="garmin" variant="feature">Garmin Pay</Tag>);
+            if (p.features?.prenesi) tags.push(<Tag key="prenesi" variant="feature">Prenesi</Tag>);
+            if (p.features?.ips_qr) tags.push(<Tag key="ips" variant="feature">IPS QR</Tag>);
+            if (p.swift_in?.pct === 0) tags.push(<Tag key="swift0" variant="feature">SWIFT in 0%</Tag>);
+            if (p.cashback && p.cashback !== 'Нет' && p.cashback !== 'Нет программы кэшбэка') {
+              tags.push(<Tag key="cb" variant="feature">Кэшбэк</Tag>);
+            }
+
+            return (
+              <article
+                key={item.id}
+                className={`bg-white border rounded-2xl px-5 py-4 transition-colors ${
+                  isBlocked
+                    ? 'border-slate-100 opacity-60'
+                    : 'border-slate-200 hover:border-slate-300'
+                }`}
+              >
+                {/* Верхняя строка */}
+                <div className="flex items-center gap-3">
+                  {/* Логотип */}
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-semibold shrink-0"
+                    style={{ backgroundColor: logoColor, color: logoTextColor }}
+                  >
+                    {logoInitials}
                   </div>
 
-                  {/* Ссылка на динамический роут продукта */}
-                  <div className="p-4 bg-slate-50/50 border-t border-slate-100">
-                    <Link 
-                      href={`/accounts/product/${product.product_id}`}
-                      className={`flex w-full justify-center items-center py-2 rounded-lg text-xs font-bold tracking-wide transition-colors ${
-                        isBlocked 
-                          ? 'bg-red-100 text-red-800 hover:bg-red-200' 
-                          : 'bg-slate-900 text-white hover:bg-slate-800'
-                      }`}
-                    >
-                      {isBlocked ? 'Смотреть причины ограничений' : 'Детальные тарифы и документы'}
-                    </Link>
+                  {/* Название + банк */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-900 leading-snug truncate">{p.name}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{p.banks.name}</p>
                   </div>
+
+                  {/* Обслуживание */}
+                  <div className="text-right shrink-0">
+                    <p className="text-[11px] text-slate-400">Обслуживание</p>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {p.maintenance_fee_rsd === 0
+                        ? 'Бесплатно'
+                        : p.maintenance_fee_rsd
+                          ? `${p.maintenance_fee_rsd} RSD/мес`
+                          : 'Нет данных'}
+                    </p>
+                  </div>
+
+                  {/* Вероятность */}
+                  <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 ${probBadgeClass(item.probability, item.is_available)}`}>
+                    {probLabel(item.probability, item.is_available)}
+                  </span>
+
+                  {/* Кнопка ⓘ */}
+                  <button
+                    onClick={() => setDrawerItem(item)}
+                    aria-label={`Подробности о ${p.name}`}
+                    className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors shrink-0"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+
+                  {/* Кнопка Подробнее */}
+                  <Link
+                    href={`/accounts/product/${p.product_id}`}
+                    className="shrink-0 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                  >
+                    Подробнее
+                  </Link>
                 </div>
-              );
-            })}
-          </div>
 
-        </section>
-      ))}
+                {/* Теги */}
+                <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-100">
+                  {tags}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Drawer — рендерится вне потока, управляется через стейт */}
+      <ProductDrawer
+        item={drawerItem}
+        onClose={() => setDrawerItem(null)}
+      />
     </div>
   );
 }

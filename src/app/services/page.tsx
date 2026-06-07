@@ -1,3 +1,4 @@
+// src/app/services/page.tsx
 import { createClient } from "@supabase/supabase-js";
 import { VerifiedExperts } from "@/components/Services/VerifiedExperts";
 import type { ServiceProvider } from "@/types/database";

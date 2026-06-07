@@ -1,3 +1,4 @@
+// src/app/accounts/page.tsx
 import { cookies } from "next/headers";
 import { BankMatrix } from "@/components/Accounts/BankMatrix";
 import { getMatrixItemsForStatus } from "@/lib/data/banks";
