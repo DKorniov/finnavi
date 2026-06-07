@@ -1,7 +1,7 @@
 // src/components/MainTabsClient.tsx
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useResidency } from "@/components/ResidencyProvider";
 import { BankMatrix } from "@/components/Accounts/BankMatrix";
@@ -59,8 +59,16 @@ interface MainTabsClientProps {
 }
 
 export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProviders }: MainTabsClientProps) {
-  const [activeTab, setActiveTab] = useState<TabId>('accounts');
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { legalType } = useResidency();
+
+  // Таб живёт в URL: /?tab=credit_mortgage — router.back() восстановит его
+  const activeTab = (searchParams.get('tab') as TabId) || 'accounts';
+
+  function setActiveTab(tab: TabId) {
+    router.push(`/?tab=${tab}`, { scroll: false });
+  }
 
   const statusInfo = STATUS_INFO[currentStatus];
 

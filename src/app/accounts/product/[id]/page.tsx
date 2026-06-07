@@ -1,6 +1,7 @@
+// src/app/accounts/product/[id]/page.tsx
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { BackButton } from "@/components/BackButton";
 import { getProductWithBankData } from "@/lib/data/banks"; 
 import type { ResidencyStatus, LegalType, KYCRule } from "@/types/bank";
 
@@ -17,10 +18,7 @@ function formatResidencyStatus(status: ResidencyStatus): string {
   return mapping[status] || status;
 }
 
-// Изменена типизация params для поддержки Next.js 15 (Promise)
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> | { id: string } }) {
-  
-  // 🔥 ИСПРАВЛЕНИЕ 404: Безопасно разворачиваем params и декодируем URL
   const resolvedParams = await Promise.resolve(params);
   const productId = decodeURIComponent(resolvedParams.id);
   
@@ -28,7 +26,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const userStatus = (cookieStore.get("expat_status")?.value || "non_resident") as ResidencyStatus;
   const userLegalType = (cookieStore.get("expat_legal_type")?.value || "individual") as LegalType;
 
-  // Ищем продукт по корректному ID
   const data = await getProductWithBankData(productId);
   
   if (!data) {
@@ -44,13 +41,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 font-sans antialiased animate-fade-in">
       
-      {/* Кнопка возврата */}
-      <Link href="/accounts" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 mb-6 group">
-        <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Назад к матрице счетов
-      </Link>
+      {/* Кнопка возврата — router.back() возвращает на предыдущую страницу с сохранением активного таба */}
+      <BackButton />
 
       {/* Заголовок */}
       <header className="mb-8 border-b border-slate-200 pb-6">
@@ -98,7 +90,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       {/* Метрики и фичи */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         
-        {/* Финансы */}
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
           <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50">
             <h3 className="font-bold text-slate-900 text-sm">Тарифная сетка продукта</h3>
@@ -110,17 +101,15 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 {product.maintenance_fee_rsd !== undefined ? `${product.maintenance_fee_rsd} RSD / мес` : "Нет данных"}
               </span>
             </div>
-            
             <div className="flex justify-between border-b border-slate-50 pb-2">
               <span className="text-slate-500">Входящий SWIFT</span>
               <span className="font-bold text-slate-900 text-right">
                 {product.swift_in?.pct !== undefined ? `${product.swift_in.pct}%` : "Нет данных"}
                 <span className="block text-[10px] text-slate-400 font-normal mt-0.5">
-                  {product.swift_in?.min_rsd ? `Мин ${product.swift_in.min_rsd} RSD` : "Без комиссии банка"}
+                  {product.swift_in?.min_rsd ? `Мин ${product.swift_in.min_rsd} RSD` : "Без минимума"}
                 </span>
               </span>
             </div>
-            
             <div className="flex justify-between pb-2">
               <span className="text-slate-500">Исходящий SWIFT</span>
               <span className="font-bold text-slate-900 text-right">
@@ -133,7 +122,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
-        {/* Локальные фичи */}
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
           <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50">
             <h3 className="font-bold text-slate-900 text-sm">Специфика платежных систем</h3>
@@ -146,29 +134,28 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-600">Apple Pay поддержка</span>
+              <span className="text-slate-600">Apple Pay</span>
               <span className={product.features?.apple_pay ? 'text-emerald-600 font-bold' : 'text-slate-300'}>
                 {product.features?.apple_pay ? 'Есть' : 'Нет'}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-600">Сервис Prenesi (перевод по номеру)</span>
+              <span className="text-slate-600">Prenesi (перевод по номеру)</span>
               <span className={product.features?.prenesi ? 'text-emerald-600 font-bold' : 'text-slate-300'}>
                 {product.features?.prenesi ? 'Доступен' : 'Нет'}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-600">IPS QR-платежи (Народный Банк)</span>
+              <span className="text-slate-600">IPS QR-платежи</span>
               <span className={product.features?.ips_qr ? 'text-emerald-600 font-bold' : 'text-slate-300'}>
                 {product.features?.ips_qr ? 'Работают' : 'Нет'}
               </span>
             </div>
           </div>
         </div>
-
       </div>
 
-      {/* Папка документов KYC */}
+      {/* Документы KYC */}
       {currentKycRule && currentKycRule.is_available && (
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden mb-8 shadow-xs">
           <div className="px-5 py-4 bg-slate-900 text-white">
@@ -185,7 +172,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 </li>
               ))}
             </ul>
-
             {(currentKycRule.red_flags?.length || 0) > 0 && (
               <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg text-xs text-amber-900">
                 <span className="font-bold block mb-1">Специфика сербского рандома в {bank.brand_name}:</span>
@@ -200,7 +186,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         </div>
       )}
 
-      {/* Ограничения DinaCard */}
+      {/* DinaCard */}
       <div className="bg-slate-100 rounded-xl p-4 text-xs text-slate-600 mb-8 border border-slate-200">
         <span className="font-bold text-slate-800 block mb-1">Обязательное примечание по DinaCard:</span>
         {product.cards?.dina_notes || "Согласно регулированию NBS, карта DinaCard выпускается автоматически ко всем счетам в RSD. Она работает только на территории Сербии."}
