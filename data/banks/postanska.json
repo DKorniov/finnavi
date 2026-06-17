@@ -5,7 +5,7 @@
   "maticni_broj": "07004893",
   "website": "https://www.posted.co.rs",
   "logo_color": "#F7A600",
-  "last_updated": "2026-05-30",
+  "last_updated": "2026-06-15",
   "kyc_matrix": [
     {
       "status": "non_resident",
@@ -220,66 +220,181 @@
       "bonuses": "Самый низкий исходящий SWIFT среди госбанков (0.25%). Приём рублёвых переводов без ограничений"
     },
     {
-      "product_id": "ps_stednja_rsd",
-      "name": "Oročena štednja RSD",
+      "product_id": "ps_stednja_rsd_klasicna",
+      "name": "Klasična oročena štednja sa isplatom kamate po dospeću (RSD)",
       "category": "savings_deposit",
-      "availability_note": "Доступен при наличии счёта в банке. Особая ставка для пенсионеров.",
+      "deposit_type": "orocena",
       "currencies": [
         "RSD"
       ],
       "terms": [
         {
+          "term_months": 1,
+          "rate_pct": 0.4,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
           "term_months": 3,
-          "rate_pct": 5.5,
+          "rate_pct": 0.9,
           "early_withdrawal_penalty_pct": 50
         },
         {
           "term_months": 6,
-          "rate_pct": 7.0,
+          "rate_pct": 1.25,
           "early_withdrawal_penalty_pct": 50
         },
         {
           "term_months": 12,
-          "rate_pct": 8.5,
-          "early_withdrawal_penalty_pct": 100
+          "rate_pct": 1.85,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 25,
+          "rate_pct": 2.1,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 2.5,
+          "early_withdrawal_penalty_pct": 50
         }
       ],
+      "capitalization_type": "at_end",
+      "interest_payout": "at_end",
+      "replenishment_allowed": false,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": null,
+      "grace_period_note": null,
+      "early_withdrawal_penalty": "recalculated",
       "tax_on_interest_pct": 0,
-      "tax_note": "RSD-вклады освобождены от налога на процентный доход.",
-      "min_amount_rsd": 5000,
+      "tax_note": "RSD — 0%, банк является налоговым агентом",
+      "min_amount_rsd": 10000,
+      "min_amount_eur": null,
       "is_available_non_resident": true,
-      "notes": "Одна из лучших ставок среди госбанков. Высокий валютный риск при конвертации в EUR."
+      "notes": "Ставки ниже рынка — государственный банк приоритизирует доступность над доходностью. Частичное снятие разрешено. Условия досрочного расторжения определяются договором."
     },
     {
-      "product_id": "ps_stednja_eur",
-      "name": "Oročena štednja EUR",
+      "product_id": "ps_stednja_rsd_renta",
+      "name": "Rentna štednja sa mesečnom isplatom kamate (RSD)",
       "category": "savings_deposit",
-      "availability_note": "Доступен при наличии EUR-счёта в банке.",
+      "deposit_type": "renta",
+      "currencies": [
+        "RSD"
+      ],
+      "terms": [
+        {
+          "term_months": 12,
+          "rate_pct": 1.85,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 25,
+          "rate_pct": 2.1,
+          "early_withdrawal_penalty_pct": 50
+        }
+      ],
+      "capitalization_type": null,
+      "interest_payout": "monthly",
+      "replenishment_allowed": false,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": null,
+      "grace_period_note": null,
+      "early_withdrawal_penalty": "recalculated",
+      "tax_on_interest_pct": 0,
+      "tax_note": "RSD — 0%, банк является налоговым агентом",
+      "min_amount_rsd": 20000,
+      "min_amount_eur": null,
+      "is_available_non_resident": true,
+      "notes": "Проценты ежемесячно переводятся на счёт до востребования. Удобно как источник регулярного дохода."
+    },
+    {
+      "product_id": "ps_stednja_eur_orocena",
+      "name": "Oročena devizna štednja (EUR/USD)",
+      "category": "savings_deposit",
+      "deposit_type": "orocena",
+      "currencies": [
+        "EUR",
+        "USD"
+      ],
+      "terms": [
+        {
+          "term_months": 1,
+          "rate_pct": 0.05,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 3,
+          "rate_pct": 0.05,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 6,
+          "rate_pct": 0.05,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 0.05,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 0.05,
+          "early_withdrawal_penalty_pct": 50
+        }
+      ],
+      "capitalization_type": "at_end",
+      "interest_payout": "at_end",
+      "replenishment_allowed": false,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": null,
+      "grace_period_note": null,
+      "early_withdrawal_penalty": "recalculated",
+      "tax_on_interest_pct": 15,
+      "tax_note": "EUR/USD — 15% налог, банк является налоговым агентом",
+      "min_amount_rsd": null,
+      "min_amount_eur": null,
+      "is_available_non_resident": true,
+      "notes": "Ставка 0.05% для всех сроков. Фактически нулевая реальная доходность. Единственное преимущество — гарантия государства и возможность частичного снятия."
+    },
+    {
+      "product_id": "ps_stednja_eur_renta",
+      "name": "Rentna devizna štednja sa mesečnom isplatom (EUR)",
+      "category": "savings_deposit",
+      "deposit_type": "renta",
       "currencies": [
         "EUR"
       ],
       "terms": [
         {
-          "term_months": 3,
-          "rate_pct": 1.5,
-          "early_withdrawal_penalty_pct": 50
-        },
-        {
-          "term_months": 6,
-          "rate_pct": 2.0,
-          "early_withdrawal_penalty_pct": 50
-        },
-        {
           "term_months": 12,
-          "rate_pct": 2.8,
-          "early_withdrawal_penalty_pct": 100
+          "rate_pct": 0.35,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 25,
+          "rate_pct": 0.65,
+          "early_withdrawal_penalty_pct": 50
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 0.8,
+          "early_withdrawal_penalty_pct": 50
         }
       ],
+      "capitalization_type": null,
+      "interest_payout": "monthly",
+      "replenishment_allowed": false,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": null,
+      "grace_period_note": null,
+      "early_withdrawal_penalty": "recalculated",
       "tax_on_interest_pct": 15,
-      "tax_note": "EUR-вклады облагаются 15% налогом. Банк — налоговый агент.",
-      "min_amount_eur": 200,
-      "is_available_non_resident": false,
-      "notes": "Государственный банк — гарантия АДВ 50 000 EUR, плюс де-факто гарантия государства."
+      "tax_note": "EUR — 15% налог, банк является налоговым агентом",
+      "min_amount_rsd": null,
+      "min_amount_eur": null,
+      "is_available_non_resident": true,
+      "notes": "Проценты ежемесячно переводятся на счёт до востребования. Лучшая EUR-ставка среди продуктов Poštanska."
     },
     {
       "product_id": "ps_bonds_gov",
@@ -300,8 +415,6 @@
       "custody_fee_pct_annual": 0.2,
       "coupon_collection_fee_pct": 0.1,
       "min_investment_rsd": 50000,
-      "access_note": "Государственный банк с прямым участием в аукционах НБС. Одна из самых низких комиссий.",
-      "red_flags": [],
       "notes": "Только динарные облигации. EUR-облигации через этот банк недоступны."
     },
     {
@@ -348,7 +461,7 @@
       "fee_outgoing_pct": 0.4,
       "fee_outgoing_min_rsd": 2500,
       "fee_outgoing_max_rsd": null,
-      "supported_currencies": [
+      "currencies": [
         "EUR",
         "USD",
         "CHF",

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useResidency } from "@/components/ResidencyProvider";
 import { BankMatrix } from "@/components/Accounts/BankMatrix";
 import { InvestTab } from "@/components/Invest/InvestTab";
+import { SavingsTab } from "@/components/Savings/SavingsTab";
 import { TaxOptimizer } from "@/components/Taxes/TaxOptimizer";
 import { VerifiedExperts } from "@/components/Services/VerifiedExperts";
 import type { TransformedMatrixItem, ResidencyStatus, BankProduct } from "@/types/bank";
@@ -125,6 +126,8 @@ export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProvi
           brokers={brokers}
           currentStatus={currentStatus}
         />
+        ) : activeTab === 'savings_deposit' ? (
+        <SavingsTab items={allItems} />
       ) : visibleItems.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200">
           <p className="text-slate-400 text-sm">Нет данных для выбранного статуса</p>

@@ -24,8 +24,15 @@ function probBadgeClass(probability: Probability, isAvailable: boolean): string 
   return "bg-orange-50 text-orange-700";
 }
 
-// Строка в drawer: label + value
-function DrawerRow({ label, value, valueClass }: { label: string; value: string; valueClass?: string }) {
+function DrawerRow({
+  label,
+  value,
+  valueClass,
+}: {
+  label: string;
+  value: string;
+  valueClass?: string;
+}) {
   return (
     <div className="flex justify-between items-start gap-4 py-2.5 border-b border-slate-100 last:border-b-0">
       <span className="text-sm text-slate-500 shrink-0 max-w-[140px] leading-snug">{label}</span>
@@ -36,7 +43,6 @@ function DrawerRow({ label, value, valueClass }: { label: string; value: string;
   );
 }
 
-// Секция с заголовком
 function DrawerSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
@@ -48,7 +54,6 @@ function DrawerSection({ title, children }: { title: string; children: React.Rea
   );
 }
 
-// Индикатор фичи (точка + название)
 function FeatureItem({ active, label }: { active: boolean; label: string }) {
   return (
     <div className="flex items-center gap-2 text-xs">
@@ -58,8 +63,13 @@ function FeatureItem({ active, label }: { active: boolean; label: string }) {
   );
 }
 
+// Форматирование SWIFT — вынесено за компонент чтобы не пересоздавать
+function fmtSwift(pct: number, min_rsd: number | null): string {
+  const base = pct === 0 ? 'Бесплатно' : `${pct}%`;
+  return min_rsd ? `${base} (мин ${min_rsd} RSD)` : base;
+}
+
 export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
-  // Закрытие по Escape
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose();
   }, [onClose]);
@@ -79,19 +89,8 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
   const p = item?.products;
   const isBlocked = item ? (!item.is_available || item.probability === 'blocked') : false;
 
-  // Логотип банка
-  const logoColor = p?.banks.logo_color ?? '#1e293b';
-  const logoTextColor = logoColor === '#FFCC00' ? '#1e293b' : '#ffffff';
+  // Инициалы банка для аватара
   const logoInitials = p?.banks.name.slice(0, 2).toUpperCase() ?? '';
-
-  // Форматирование SWIFT
-  function fmtSwift(pct: number, min_rsd: number | null): string {
-    const base = pct === 0 ? 'Бесплатно' : `${pct}%`;
-    return min_rsd ? `${base} (мин ${min_rsd} RSD)` : base;
-  }
-
-  // Есть ли реальный кэшбэк
-  const hasCashback = p?.cashback && p.cashback !== 'Нет' && p.cashback !== 'Нет программы кэшбэка';
 
   return (
     <>
@@ -115,10 +114,7 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
       >
         {/* Шапка */}
         <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 shrink-0">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-semibold shrink-0"
-            style={{ backgroundColor: logoColor, color: logoTextColor }}
-          >
+          <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-sm font-semibold text-white shrink-0">
             {logoInitials}
           </div>
           <div className="flex-1 min-w-0">
@@ -136,16 +132,16 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
           </button>
         </div>
 
-        {/* Тело drawer — скроллится */}
+        {/* Тело — скроллится */}
         <div className="flex-1 overflow-y-auto">
 
-          {/* Блок причин отказа — только для заблокированных */}
-          {item && isBlocked && item.blocked_reasons.length > 0 && (
+          {/* Блокировка — показываем red_flags вместо blocked_reasons */}
+          {item && isBlocked && item.red_flags.length > 0 && (
             <DrawerSection title="Почему счёт недоступен">
               <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 my-3">
                 <p className="text-xs font-semibold text-amber-800 mb-2">Причины для вашего профиля</p>
                 <ul className="space-y-1.5">
-                  {item.blocked_reasons.map((reason, i) => (
+                  {item.red_flags.map((reason, i) => (
                     <li key={i} className="flex gap-2 text-xs text-amber-700 leading-relaxed">
                       <span className="shrink-0 mt-0.5">→</span>
                       <span>{reason}</span>
@@ -159,57 +155,79 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
           {/* Условия счёта */}
           {p && (
             <DrawerSection title="Условия счёта">
+              {/* Обслуживание */}
               <DrawerRow
                 label="Обслуживание"
-                value={p.maintenance_fee_rsd === 0 ? 'Бесплатно' : p.maintenance_fee_rsd ? `${p.maintenance_fee_rsd} RSD / мес` : 'Нет данных'}
+                value={
+                  p.maintenance_fee_rsd === 0
+                    ? 'Бесплатно'
+                    : p.maintenance_fee_rsd != null
+                      ? `${p.maintenance_fee_rsd} RSD / мес`
+                      : 'Нет данных'
+                }
+                valueClass={p.maintenance_fee_rsd === 0 ? 'text-emerald-700 font-medium' : 'text-slate-900 font-medium'}
               />
-              {p.swift_in !== undefined && (
+
+              {/* Входящий SWIFT — только если pct не null */}
+              {p.swift_in?.pct != null && (
                 <DrawerRow
                   label="Входящий SWIFT"
                   value={fmtSwift(p.swift_in.pct, p.swift_in.min_rsd)}
-                  valueClass={p.swift_in.pct === 0 ? 'text-emerald-700 font-medium' : p.swift_in.pct >= 0.8 ? 'text-amber-700 font-medium' : 'text-slate-900 font-medium'}
+                  valueClass={
+                    p.swift_in.pct === 0
+                      ? 'text-emerald-700 font-medium'
+                      : p.swift_in.pct >= 0.8
+                        ? 'text-amber-700 font-medium'
+                        : 'text-slate-900 font-medium'
+                  }
                 />
               )}
-              {p.swift_out !== undefined && (
+
+              {/* Исходящий SWIFT — только если pct не null */}
+              {p.swift_out?.pct != null && (
                 <DrawerRow
                   label="Исходящий SWIFT"
                   value={fmtSwift(p.swift_out.pct, p.swift_out.min_rsd)}
-                  valueClass={p.swift_out.pct >= 0.8 ? 'text-amber-700 font-medium' : 'text-slate-900 font-medium'}
+                  valueClass={
+                    p.swift_out.pct === 0
+                      ? 'text-emerald-700 font-medium'
+                      : p.swift_out.pct >= 0.8
+                        ? 'text-amber-700 font-medium'
+                        : 'text-slate-900 font-medium'
+                  }
                 />
               )}
-              <DrawerRow
-                label="Срок изготовления карты"
-                value={p.card_issue_days ?? 'Уточняйте в банке'}
-                valueClass="text-slate-600 font-medium"
-              />
+
+              {/* Карты */}
               {p.cards && (
                 <DrawerRow
                   label="Карты"
                   value={[...p.cards.international, 'DinaCard'].join(', ')}
                 />
               )}
-              {p.supported_currencies && (
+
+              {/* Валюты */}
+              {p.supported_currencies && p.supported_currencies.length > 0 && (
                 <DrawerRow
                   label="Валюты счёта"
                   value={p.supported_currencies.join(', ')}
                 />
               )}
-              <DrawerRow
-                label="Бесконтактная оплата"
-                value={p.features?.contactless ? 'Поддерживается' : 'Нет'}
-                valueClass={p.features?.contactless ? 'text-emerald-700 font-medium' : 'text-slate-400 font-medium'}
-              />
-              <DrawerRow
-                label="Кэшбэк"
-                value={p.cashback ?? 'Нет'}
-                valueClass={hasCashback ? 'text-emerald-700 font-medium' : 'text-slate-400 font-medium'}
-              />
-              {p.bonuses && (
+
+              {/* Мультивалютный */}
+              {p.is_multicurrency != null && (
                 <DrawerRow
-                  label="Бонусы и скидки"
-                  value={p.bonuses}
-                  valueClass="text-slate-600 font-medium"
+                  label="Мультивалютный"
+                  value={p.is_multicurrency ? 'Да' : 'Нет'}
+                  valueClass={p.is_multicurrency ? 'text-emerald-700 font-medium' : 'text-slate-400 font-medium'}
                 />
+              )}
+
+              {/* Примечания из JSON */}
+              {p.notes && (
+                <div className="py-3">
+                  <p className="text-xs text-slate-500 leading-relaxed">{p.notes}</p>
+                </div>
               )}
             </DrawerSection>
           )}
@@ -218,17 +236,16 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
           {p?.features && (
             <DrawerSection title="Цифровые сервисы">
               <div className="grid grid-cols-2 gap-2 py-3">
-                <FeatureItem active={p.features.apple_pay} label="Apple Pay" />
-                <FeatureItem active={p.features.google_pay} label="Google Pay" />
-                <FeatureItem active={p.features.garmin_pay} label="Garmin Pay" />
-                <FeatureItem active={p.features.prenesi} label="Prenesi" />
-                <FeatureItem active={p.features.ips_qr} label="IPS QR" />
-                <FeatureItem active={p.features.contactless ?? false} label="Бесконтакт" />
+                <FeatureItem active={p.features.apple_pay  ?? false} label="Apple Pay" />
+                <FeatureItem active={p.features.google_pay ?? false} label="Google Pay" />
+                <FeatureItem active={p.features.garmin_pay ?? false} label="Garmin Pay" />
+                <FeatureItem active={p.features.prenesi    ?? false} label="Prenesi" />
+                <FeatureItem active={p.features.ips_qr     ?? false} label="IPS QR" />
               </div>
             </DrawerSection>
           )}
 
-          {/* KYC — вероятность и документы */}
+          {/* KYC */}
           {item && (
             <DrawerSection title="Вероятность открытия">
               <div className="py-3">
@@ -249,8 +266,8 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
             </DrawerSection>
           )}
 
-          {/* Красные флаги */}
-          {item && item.red_flags.length > 0 && (
+          {/* Красные флаги — для доступных продуктов */}
+          {item && item.is_available && item.red_flags.length > 0 && (
             <DrawerSection title="Важно знать">
               <div className="bg-red-50 border border-red-100 rounded-xl p-3 my-3">
                 <ul className="space-y-1.5">
@@ -265,7 +282,7 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
             </DrawerSection>
           )}
 
-          {/* DinaCard заметка */}
+          {/* DinaCard */}
           {p?.cards?.dina_notes && (
             <DrawerSection title="DinaCard">
               <p className="text-xs text-slate-500 leading-relaxed py-3">{p.cards.dina_notes}</p>
@@ -274,11 +291,11 @@ export function ProductDrawer({ item, onClose }: ProductDrawerProps) {
 
         </div>
 
-        {/* Футер — sticky */}
-        <div className="shrink-0 px-5 py-4 border-t border-slate-100 flex gap-3">
+        {/* Футер */}
+        <div className="shrink-0 px-5 py-4 border-t border-slate-100">
           <Link
             href={`/accounts/product/${p?.product_id ?? ''}`}
-            className="flex-1 text-center text-sm font-semibold py-2.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+            className="block w-full text-center text-sm font-semibold py-2.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-colors"
           >
             Детальные тарифы →
           </Link>

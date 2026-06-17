@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { ResidencyProvider } from "@/components/ResidencyProvider";
 import { StickyHeader } from "@/components/StickyHeader";
+import { OnboardingSheet } from "@/components/OnboardingSheet"; // ← новый импорт
 import type { ResidencyStatus, LegalType } from "@/types/bank";
 import "./globals.css";
 
@@ -16,17 +17,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  
-  // 🔥 ЭТАЛОННЫЙ ДЕФОЛТ: Если куки не заданы, открываем как Нерезидент + Физическое лицо
+
   const initialStatus = (cookieStore.get("expat_status")?.value || "non_resident") as ResidencyStatus;
   const initialLegalType = (cookieStore.get("expat_legal_type")?.value || "individual") as LegalType;
+
+  // Первый визит = кука expat_status ещё не была выставлена пользователем
+  const isFirstVisit = !cookieStore.get("expat_status")?.value; // ← новая строка
 
   return (
     <html lang="ru">
       <body className="bg-slate-50 text-slate-900 antialiased">
-        {/* Прокидываем оба стартовых значения в клиентский контекст */}
         <ResidencyProvider initialStatus={initialStatus} initialLegalType={initialLegalType}>
           <StickyHeader />
+          <OnboardingSheet isFirstVisit={isFirstVisit} /> {/* ← монтируем */}
           <main className="pt-20 pb-16">
             {children}
           </main>

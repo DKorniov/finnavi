@@ -5,7 +5,7 @@
   "maticni_broj": "07759231",
   "website": "https://www.bancaintesa.rs",
   "logo_color": "#009A44",
-  "last_updated": "2026-05-30",
+  "last_updated": "2026-06-15",
   "kyc_matrix": [
     {
       "status": "non_resident",
@@ -17,7 +17,7 @@
         "С 2023 года массовые отказы нерезидентам с РФ/РБ паспортами на основании комплаенс-политики группы Intesa Sanpaolo."
       ],
       "blocked_reasons": [
-        "AML-политика материнской группы Intesa Sanpaolo (Италия): граждане РФ/РБ отнесены к категории повышенного риска согласно внутренней политике группы с 2022 года",
+        "AML-политика материнской группы Intesa Sanpaolo (Италия): граждане РФ/РБ отнесены к категории повышенного риска с 2022 года",
         "Директива ЕС по санкциям применяется итальянской головной структурой к дочерним банкам в третьих странах, включая Сербию"
       ]
     },
@@ -81,7 +81,8 @@
         "Полный блок для нерезидентов с РФ паспортами."
       ],
       "blocked_reasons": [
-        "Полный блок для нерезидентов: помимо требований к физлицам, отсутствует сербский налоговый номер (PIB), обязательный для открытия бизнес-счёта"
+        "Полный блок для нерезидентов: отсутствует сербский налоговый номер (PIB), обязательный для открытия бизнес-счёта",
+        "AML-политика группы Intesa Sanpaolo"
       ]
     },
     {
@@ -91,7 +92,7 @@
       "probability": "blocked",
       "required_docs": [],
       "red_flags": [
-        "Banca Intesa с 2024 года фактически прекратила открытие ИП-счетов гражданам РФ/РБ. Итальянская материнская компания ужесточила AML-требования."
+        "Banca Intesa с 2024 года фактически прекратила открытие ИП-счетов гражданам РФ/РБ."
       ],
       "blocked_reasons": [
         "Внутренний циркуляр Banca Intesa (2024): открытие ИП-счетов гражданам РФ/РБ приостановлено независимо от статуса резидентства",
@@ -141,154 +142,637 @@
   ],
   "products": [
     {
-      "product_id": "bi_personal_standard",
-      "name": "Tekući račun (Личный счёт)",
+      "product_id": "BANCA_INTESA_personal_osnovni_paket",
+      "name": "Paket platni račun sa osnovnim uslugama",
       "category": "personal_account",
+      "package_tier": "basic",
+      "is_multicurrency": false,
+      "supported_currencies": [
+        "RSD"
+      ],
+      "maintenance_fee_rsd": 150,
+      "swift_in": null,
+      "swift_out": null,
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": [],
+        "dina_notes": "Dina debitna platna kartica uz osnovni set funkcionalnosti"
+      },
+      "notes": "Открывается только лицам с законным проживанием в РС, у которых нет другого платёжного счёта. Банкомат других банков: 2% (мин 90 RSD)."
+    },
+    {
+      "product_id": "BANCA_INTESA_personal_hit",
+      "name": "Intesa Hit platni račun",
+      "category": "personal_account",
+      "package_tier": "standard",
+      "is_multicurrency": false,
+      "supported_currencies": [
+        "RSD"
+      ],
+      "maintenance_fee_rsd": 350,
+      "swift_in": null,
+      "swift_out": null,
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": [
+          "Visa",
+          "Mastercard"
+        ],
+        "dina_notes": "Bez naknade"
+      },
+      "notes": "Бонус: полис дополнительного медицинского страхования, льготный курс EUR в приложении. Банкомат других банков: 2% (мин 90 RSD)."
+    },
+    {
+      "product_id": "BANCA_INTESA_personal_hit_plus",
+      "name": "Intesa Hit Plus platni račun",
+      "category": "personal_account",
+      "package_tier": "plus",
+      "is_multicurrency": true,
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
+      "maintenance_fee_rsd": 475,
+      "swift_in": {
+        "pct": 0.35,
+        "min_rsd": 300,
+        "max_rsd": 60000,
+        "notes": null
+      },
+      "swift_out": {
+        "pct": 0.7,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "E-banking/Mobilno: 0.5% (мин 700, макс 30000)"
+      },
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": [
+          "Visa",
+          "Mastercard"
+        ],
+        "dina_notes": "Bez naknade"
+      },
+      "notes": "SEPA IN: 0.06% (мин 100, макс 15000 RSD). SEPA OUT: 0.08% (мин 300, макс 5500) / E-banking 0.04% (мин 150, макс 2750). Девизный счёт EUR включён бесплатно."
+    },
+    {
+      "product_id": "BANCA_INTESA_personal_magnifica",
+      "name": "Intesa Magnifica platni račun",
+      "category": "personal_account",
+      "package_tier": "premium",
+      "is_multicurrency": true,
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
+      "maintenance_fee_rsd": 799,
+      "swift_in": {
+        "pct": 0.175,
+        "min_rsd": 150,
+        "max_rsd": 30000,
+        "notes": "50% скидка от стандарта (0.35%)"
+      },
+      "swift_out": {
+        "pct": 0.35,
+        "min_rsd": 500,
+        "max_rsd": 20000,
+        "notes": "50% скидка. E-banking: 0.25% (мин 350, макс 15000)"
+      },
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": [
+          "Visa",
+          "Mastercard",
+          "American Express"
+        ],
+        "dina_notes": "Bez naknade"
+      },
+      "notes": "SEPA IN: 0.03% 50% скидка. SEPA OUT: 0.04% (мин 150, макс 2750) / E-banking 0.02%. Включает American Express — уникально для рынка."
+    },
+    {
+      "product_id": "BANCA_INTESA_personal_devizni_rezidenti",
+      "name": "Devizni platni račun za rezidente",
+      "category": "personal_account",
+      "package_tier": "standard",
+      "is_multicurrency": true,
+      "supported_currencies": [
+        "EUR",
+        "USD",
+        "GBP",
+        "AUD",
+        "CAD",
+        "JPY",
+        "DKK",
+        "NOK",
+        "SEK"
+      ],
+      "maintenance_fee_rsd": 120,
+      "maintenance_fee_condition": "Только при наличии финансовых операций за месяц. Бесплатно для Hit Plus и Magnifica (один EUR счёт).",
+      "swift_in": {
+        "pct": 0.35,
+        "min_rsd": 300,
+        "max_rsd": 60000,
+        "notes": "Приём в других валютах"
+      },
+      "swift_out": {
+        "pct": 0.7,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "E-banking: 0.5% (мин 700, макс 30000)"
+      },
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": null
+      },
+      "cards": {
+        "international": [
+          "Visa",
+          "Mastercard"
+        ],
+        "dina_notes": "DinaCard не предусмотрена для девизного счёта"
+      },
+      "notes": "DKK, NOK, SEK — только безналичные операции. SEPA IN: 0.06% (мин 100, макс 15000). SEPA OUT: 0.08%."
+    },
+    {
+      "product_id": "BANCA_INTESA_personal_devizni_nerezidenti",
+      "name": "Devizni platni račun za nerezidente",
+      "category": "personal_account",
+      "package_tier": "standard",
+      "is_multicurrency": true,
+      "supported_currencies": [
+        "EUR",
+        "USD",
+        "GBP",
+        "AUD",
+        "CAD",
+        "JPY",
+        "DKK",
+        "NOK",
+        "SEK"
+      ],
+      "maintenance_fee_rsd": 120,
+      "maintenance_fee_condition": "Только при наличии финансовых операций за месяц.",
+      "swift_in": {
+        "pct": 0.35,
+        "min_rsd": 300,
+        "max_rsd": 60000,
+        "notes": "Приём в других валютах"
+      },
+      "swift_out": {
+        "pct": 0.7,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "E-banking: 0.5% (мин 700, макс 30000)"
+      },
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": null
+      },
+      "cards": {
+        "international": [
+          "Visa",
+          "Mastercard"
+        ],
+        "dina_notes": "DinaCard не предусмотрена для девизного счёта"
+      },
+      "notes": "Нерезиденты могут открыть девизный счёт. Основной счёт для SWIFT-операций экспатов."
+    },
+    {
+      "product_id": "BANCA_INTESA_business_platni_racun",
+      "name": "Platni račun (Бизнес)",
+      "category": "business_account",
+      "package_tier": "basic",
+      "target": "sve",
       "is_multicurrency": true,
       "supported_currencies": [
         "RSD",
         "EUR",
         "USD",
-        "CHF"
+        "GBP"
       ],
-      "maintenance_fee_rsd": 200,
+      "maintenance_fee_rsd": 595,
       "swift_in": {
-        "pct": 0.3,
-        "min_rsd": 600,
+        "pct": 0,
+        "min_rsd": null,
         "max_rsd": null,
-        "notes": "Стандартная комиссия. Без задержек."
+        "notes": "Prijem novčanih sredstava iz inostranstva bez naknade"
       },
       "swift_out": {
-        "pct": 0.6,
-        "min_rsd": 1000,
-        "max_rsd": null,
-        "notes": "Выше среднего. Исходящий SWIFT для ВНЖ < 1 года — только в отделении."
+        "pct": 0.2,
+        "min_rsd": 1300,
+        "max_rsd": 24000,
+        "notes": "E-banking. Шалтер: 0.40% (мин 1500, макс 40000 RSD)"
       },
       "features": {
-        "apple_pay": true,
-        "google_pay": true,
-        "garmin_pay": false,
-        "prenesi": true,
-        "ips_qr": true,
-        "contactless": true
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
       },
       "cards": {
-        "dina_notes": "Обязательно для RSD-счёта.",
         "international": [
-          "Visa",
-          "Mastercard"
-        ]
+          "Visa Business Debit",
+          "Visa Platinum Business",
+          "Mastercard Business"
+        ],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": "До 7 рабочих дней",
-      "cashback": "Нет",
-      "bonuses": "Программа Loyalty+ — скидки у 200+ партнёров в Сербии (рестораны, АЗС, аптеки)"
+      "notes": "SEPA IN: 0%. SEPA OUT: 0.08% (мин 300) e-banking / шалтер 0.15% (мин 600, макс 6000). Внутренний перевод: 45 RSD. Уплата готовины: 0.08% (мин 70 RSD). Исплата: 0.5% (предприниматели бесплатно)."
     },
     {
-      "product_id": "bi_business_account",
-      "name": "Poslovni račun (ИП)",
+      "product_id": "BANCA_INTESA_business_bizsmart",
+      "name": "BizSmart paket platnog računa",
       "category": "business_account",
+      "package_tier": "standard",
+      "target": "malo_privredno_drustvo",
       "is_multicurrency": true,
       "supported_currencies": [
         "RSD",
-        "EUR"
+        "EUR",
+        "USD",
+        "GBP"
       ],
-      "maintenance_fee_rsd": 700,
+      "maintenance_fee_rsd": 990,
+      "maintenance_fee_condition": "Правна лица и предузетники с доходом до 3 млн EUR",
       "swift_in": {
-        "pct": 0.5,
-        "min_rsd": 1200,
+        "pct": 0,
+        "min_rsd": null,
         "max_rsd": null,
-        "notes": null
+        "notes": "Bez naknade"
       },
       "swift_out": {
-        "pct": 0.7,
-        "min_rsd": 2000,
-        "max_rsd": null,
-        "notes": null
+        "pct": 0.2,
+        "min_rsd": 1300,
+        "max_rsd": 24000,
+        "notes": "E-banking. Шалтер: 0.40%"
       },
       "features": {
-        "apple_pay": true,
-        "google_pay": true,
-        "garmin_pay": false,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
       },
       "cards": {
-        "dina_notes": "DinaCard Business обязательна.",
         "international": [
-          "Visa Business"
-        ]
+          "Visa Business Debit",
+          "Visa Platinum Business",
+          "Mastercard Business"
+        ],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": "До 10 рабочих дней",
-      "cashback": "Нет",
-      "bonuses": "Бесплатный e-banking BIA, интеграция с 1C, онлайн-выписки в форматах MT940/CAMT"
+      "notes": "E-banking без месячной платы. Бесплатное обслуживание E-commerce. 50% скидка на кредитные карты. SEPA IN: 0%, SEPA OUT: 0.08%."
     },
     {
-      "product_id": "bi_stednja_eur",
-      "name": "Oročena štednja EUR",
-      "category": "savings_deposit",
-      "currencies": [
-        "EUR"
+      "product_id": "BANCA_INTESA_business_bizpro",
+      "name": "BizPro paket platnog računa",
+      "category": "business_account",
+      "package_tier": "premium",
+      "target": "malo_privredno_drustvo",
+      "is_multicurrency": true,
+      "supported_currencies": [
+        "RSD",
+        "EUR",
+        "USD",
+        "GBP"
       ],
-      "terms": [
-        {
-          "term_months": 3,
-          "rate_pct": 2.0,
-          "early_withdrawal_penalty_pct": 50
-        },
-        {
-          "term_months": 6,
-          "rate_pct": 2.7,
-          "early_withdrawal_penalty_pct": 50
-        },
-        {
-          "term_months": 12,
-          "rate_pct": 3.5,
-          "early_withdrawal_penalty_pct": 100
-        },
-        {
-          "term_months": 24,
-          "rate_pct": 3.8,
-          "early_withdrawal_penalty_pct": 100
-        }
-      ],
-      "tax_on_interest_pct": 15,
-      "tax_note": "15% налог на процентный доход по EUR-вкладам.",
-      "min_amount_eur": 500,
-      "is_available_non_resident": false,
-      "notes": "Лучшая EUR-ставка из топ-5 банков. Открытие через мобильное приложение BIA."
+      "maintenance_fee_rsd": 2200,
+      "maintenance_fee_condition": "Правна лица и предузетники с доходом до 3 млн EUR",
+      "swift_in": {
+        "pct": 0,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": "Bez naknade"
+      },
+      "swift_out": {
+        "pct": 0.19,
+        "min_rsd": 1235,
+        "max_rsd": 22800,
+        "notes": "E-banking (5% скидка от стандарта). Шалтер: 0.38% (мин 1425, макс 38000)"
+      },
+      "features": {
+        "apple_pay": null,
+        "google_pay": null,
+        "garmin_pay": null,
+        "prenesi": null,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": [
+          "Visa Business Debit",
+          "Visa Platinum Business",
+          "Mastercard Business"
+        ],
+        "dina_notes": "Bez naknade"
+      },
+      "notes": "Лучший бизнес-пакет Intesa: Swift OUT 0.19%. SEPA OUT: 0.076% e-banking. 10% скидка на внутренний платёжный оборот."
     },
     {
-      "product_id": "bi_stednja_rsd",
-      "name": "Oročena štednja RSD",
+      "product_id": "BANCA_INTESA_stednja_RSD",
+      "name": "Oročeni depozit (RSD)",
       "category": "savings_deposit",
+      "deposit_type": "orocena",
       "currencies": [
         "RSD"
       ],
       "terms": [
         {
+          "term_months": 3,
+          "rate_pct": 0.0,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
           "term_months": 6,
-          "rate_pct": 6.5,
-          "early_withdrawal_penalty_pct": 50
+          "rate_pct": 1.0,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 9,
+          "rate_pct": 1.5,
+          "early_withdrawal_penalty_pct": 100
         },
         {
           "term_months": 12,
-          "rate_pct": 8.0,
+          "rate_pct": 1.75,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 24,
+          "rate_pct": 2.0,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 2.5,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 60,
+          "rate_pct": 3.0,
           "early_withdrawal_penalty_pct": 100
         }
       ],
+      "capitalization_type": null,
+      "interest_payout": "at_end",
+      "replenishment_allowed": null,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": true,
+      "grace_period_note": "В исключительных случаях (смерть, болезнь, выезд из страны) разрешается досрочное расторжение с начислением процентов по ставке платёжного счёта.",
+      "early_withdrawal_penalty": "recalculated_vista",
       "tax_on_interest_pct": 0,
-      "tax_note": "0% налог.",
+      "tax_note": "RSD — 0%, банк является налоговым агентом",
       "min_amount_rsd": 10000,
-      "is_available_non_resident": false,
+      "min_amount_eur": null,
+      "is_available_non_resident": true,
+      "notes": "Срок 3 месяца — ставка 0%. Без досрочного расторжения вне исключительных случаев. Возможно досрочное расторжение без штрафа для перевода на нецелевой депозит под кредит (100%/105%)."
+    },
+    {
+      "product_id": "BANCA_INTESA_stednja_EUR",
+      "name": "Oročeni depozit (EUR)",
+      "category": "savings_deposit",
+      "deposit_type": "orocena",
+      "currencies": [
+        "EUR"
+      ],
+      "terms": [
+        {
+          "term_months": 6,
+          "rate_pct": 0.1,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 9,
+          "rate_pct": 0.1,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 0.1,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 24,
+          "rate_pct": 0.15,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 0.2,
+          "early_withdrawal_penalty_pct": 100
+        }
+      ],
+      "capitalization_type": null,
+      "interest_payout": "at_end",
+      "replenishment_allowed": null,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": true,
+      "grace_period_note": "В исключительных случаях (смерть, болезнь, выезд) досрочное расторжение по ставке платёжного счёта.",
+      "early_withdrawal_penalty": "recalculated_vista",
+      "tax_on_interest_pct": 15,
+      "tax_note": "EUR — 15% налог, банк является налоговым агентом",
+      "min_amount_rsd": null,
+      "min_amount_eur": 100,
+      "is_available_non_resident": true,
+      "notes": "Мин. сумма 100 EUR. Через приложение — макс. 20 000 EUR. Ставки низкие — Intesa не конкурентна по EUR-депозитам."
+    },
+    {
+      "product_id": "BANCA_INTESA_stednja_renta_EUR",
+      "name": "Devizni oročeni depozit - rentna štednja (EUR/USD/GBP)",
+      "category": "savings_deposit",
+      "deposit_type": "renta",
+      "currencies": [
+        "EUR",
+        "USD",
+        "GBP"
+      ],
+      "terms": [
+        {
+          "term_months": 12,
+          "rate_pct": 0.3,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 24,
+          "rate_pct": 0.5,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 0.7,
+          "early_withdrawal_penalty_pct": 100
+        }
+      ],
+      "capitalization_type": null,
+      "interest_payout": "monthly",
+      "replenishment_allowed": null,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": true,
+      "grace_period_note": "В исключительных случаях досрочное расторжение с обязательным закрытием депозита. Начисляется ставка платёжного счёта, ранее уплаченный налог вычитается.",
+      "early_withdrawal_penalty": "recalculated_vista",
+      "tax_on_interest_pct": 15,
+      "tax_note": "EUR/USD/GBP — 15% налог, банк является налоговым агентом",
+      "min_amount_rsd": null,
+      "min_amount_eur": 500,
+      "is_available_non_resident": true,
+      "notes": "Ставки для EUR и USD одинаковы. GBP: 12м=0.30%, 24м=0.40%, 36м=0.50%. Проценты выплачиваются ежемесячно."
+    },
+    {
+      "product_id": "BANCA_INTESA_stednja_combi_EUR",
+      "name": "Combi Štednja (EUR) — депозит + инвест.фонд",
+      "category": "savings_deposit",
+      "deposit_type": "combi",
+      "currencies": [
+        "EUR"
+      ],
+      "terms": [
+        {
+          "term_months": 12,
+          "rate_pct": 1.0,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 24,
+          "rate_pct": 1.2,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 1.2,
+          "early_withdrawal_penalty_pct": 100
+        }
+      ],
+      "capitalization_type": null,
+      "interest_payout": "at_end",
+      "replenishment_allowed": null,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": true,
+      "grace_period_note": "В исключительных случаях досрочное расторжение по ставке платёжного счёта.",
+      "early_withdrawal_penalty": "recalculated_vista",
+      "tax_on_interest_pct": 15,
+      "tax_note": "EUR — 15% налог, банк является налоговым агентом",
+      "min_amount_rsd": null,
+      "min_amount_eur": 100,
+      "is_available_non_resident": true,
+      "notes": "Гибридный продукт: часть суммы в депозит, часть в инвестиционный фонд Intesa. Ставки для 30% в фонд — более высокие ставки при 50% и 70%. Для экспатов-нерезидентов нерекомендован из-за рисков доступа к фонду."
+    },
+    {
+      "product_id": "BANCA_INTESA_stednja_combi_RSD",
+      "name": "Combi Štednja (RSD) — депозит + инвест.фонд",
+      "category": "savings_deposit",
+      "deposit_type": "combi",
+      "currencies": [
+        "RSD"
+      ],
+      "terms": [
+        {
+          "term_months": 12,
+          "rate_pct": 2.0,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 24,
+          "rate_pct": 2.2,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 36,
+          "rate_pct": 2.2,
+          "early_withdrawal_penalty_pct": 100
+        }
+      ],
+      "capitalization_type": null,
+      "interest_payout": "at_end",
+      "replenishment_allowed": null,
+      "partial_withdrawal_allowed": true,
+      "grace_period_termination": true,
+      "grace_period_note": "В исключительных случаях досрочное расторжение по ставке платёжного счёта.",
+      "early_withdrawal_penalty": "recalculated_vista",
+      "tax_on_interest_pct": 0,
+      "tax_note": "RSD — 0%, банк является налоговым агентом",
+      "min_amount_rsd": 10000,
+      "min_amount_eur": null,
+      "is_available_non_resident": true,
+      "notes": "Гибридный продукт: часть суммы в депозит RSD, часть в инвестиционный фонд. Ставки для 30% в фонд."
+    },
+    {
+      "product_id": "BANCA_INTESA_loan_potrosacki",
+      "name": "Potrošački kredit u RSD",
+      "category": "credit_consumer",
+      "purpose": "general",
+      "currency": "RSD",
+      "rate_approx_pct": 7.5,
+      "rate_type": "fixed",
+      "loan_term_months": [
+        12,
+        18,
+        24,
+        36,
+        48,
+        60,
+        71
+      ],
+      "early_repayment_fee_pct": 1,
+      "processing_fee_pct": 0,
+      "income_requirement": "primanja do 100.000 RSD",
+      "notes": "Нецелевой. Для временно занятых — сроки до 36 месяцев."
+    },
+    {
+      "product_id": "BANCA_INTESA_loan_auto",
+      "name": "Kredit za kupovinu vozila u RSD",
+      "category": "credit_consumer",
+      "purpose": "auto",
+      "currency": "RSD",
+      "rate_approx_pct": 7.5,
+      "rate_type": "fixed",
+      "loan_term_months": [
+        18,
+        24,
+        36,
+        48,
+        60,
+        72,
+        84
+      ],
+      "early_repayment_fee_pct": 1,
+      "processing_fee_pct": 0,
+      "income_requirement": "primanja do 100.000 RSD",
       "notes": null
     },
     {
       "product_id": "bi_mortgage",
       "name": "Stambeni kredit (Ипотека)",
       "category": "credit_mortgage",
-      "min_residency_status": "resident_more_1y",
-      "available_for_foreigners": true,
       "currency": "EUR",
       "rate_type": "variable",
       "rate_base": "EURIBOR 3M",
@@ -305,49 +789,7 @@
       "min_down_payment_pct": 25,
       "min_amount_eur": 10000,
       "max_amount_eur": 750000,
-      "income_requirement": "Сербский доход 12+ мес, чистая кредитная история в KREDITNI BIRO",
-      "required_docs": [
-        "ID ВНЖ",
-        "Налоговая декларация за 2 года",
-        "Выписки со счёта за 12 мес",
-        "Оценка объекта",
-        "Предварительный договор"
-      ],
-      "red_flags": [
-        "Лучшая ставка в топ-5, но требования к доходу жёсткие.",
-        "Для граждан РФ возможны дополнительные вопросы от AML-отдела."
-      ],
-      "notes": "Крупнейший банк Сербии по кредитному портфелю. Лучший вариант по ипотечным ставкам, если прошли комплаенс."
-    },
-    {
-      "product_id": "bi_consumer_loan",
-      "name": "Potrošački kredit (Потребкредит)",
-      "category": "credit_consumer",
-      "min_residency_status": "resident_more_1y",
-      "available_for_foreigners": true,
-      "currency": "RSD",
-      "rate_approx_pct": 11.9,
-      "rate_type": "fixed",
-      "loan_term_months": [
-        12,
-        24,
-        36,
-        48,
-        60,
-        72,
-        84
-      ],
-      "min_amount_eur": 1000,
-      "max_amount_eur": 25000,
-      "income_requirement": "Подтверждённый доход в Сербии",
-      "required_docs": [
-        "ID ВНЖ или лична карта",
-        "Потврда о заради"
-      ],
-      "red_flags": [
-        "С РФ/РБ паспортом — риск отказа даже при хорошей кредитной истории."
-      ],
-      "notes": "Самая низкая ставка потребкредита из топ-5."
+      "notes": "Крупнейший банк Сербии по кредитному портфелю. Лучший вариант при прохождении комплаенса."
     },
     {
       "product_id": "bi_transfer_swift",
@@ -359,18 +801,21 @@
       ],
       "outgoing_resident_restriction": "ВНЖ < 1 года: только отделение + основание платежа",
       "outgoing_resident_1y_plus": "Приложение BIA без ограничений до 50 000 EUR",
-      "fee_incoming_pct": 0.3,
-      "fee_incoming_min_rsd": 600,
-      "fee_outgoing_pct": 0.6,
+      "fee_incoming_pct": 0.35,
+      "fee_incoming_min_rsd": 300,
+      "fee_outgoing_pct": 0.7,
       "fee_outgoing_min_rsd": 1000,
-      "fee_outgoing_max_rsd": null,
+      "fee_outgoing_max_rsd": 40000,
       "supported_currencies": [
         "EUR",
         "USD",
         "CHF",
-        "GBP"
+        "GBP",
+        "AUD",
+        "CAD",
+        "JPY"
       ],
-      "notes": "Интеграция с сетью Intesa Sanpaolo — хорошие корреспондентские отношения с европейскими банками."
+      "notes": "E-banking исходящий: 0.5% (мин 700, макс 30000). Интеграция с сетью Intesa Sanpaolo."
     }
   ]
 }

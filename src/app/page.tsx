@@ -4,23 +4,34 @@ import { createClient } from "@supabase/supabase-js";
 import { getMatrixItemsForStatus } from "@/lib/data/banks";
 import { getAllBrokers } from "@/lib/data/brokers";
 import { MainTabsClient } from "@/components/MainTabsClient";
+import { LandingPage } from "@/components/Landing/LandingPage"; // ← новый импорт
 import type { ResidencyStatus, LegalType } from "@/types/bank";
 import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
 
 export const dynamic = 'force-dynamic';
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const resolvedParams = await searchParams;
+
+  // ── Вариант Б: лендинг когда нет ?tab в URL ────────────
+  if (!resolvedParams.tab) {
+    return <LandingPage />;
+  }
+  // ───────────────────────────────────────────────────────
+
   const cookieStore = await cookies();
   const status = (cookieStore.get("expat_status")?.value || "non_resident") as ResidencyStatus;
   const legalType = (cookieStore.get("expat_legal_type")?.value || "individual") as LegalType;
 
-  // JSON-данные банков и брокеров
   const [allItems, brokers] = await Promise.all([
     getMatrixItemsForStatus(status, legalType),
     getAllBrokers(),
   ]);
 
-  // Supabase-данные для вкладок Налоги и Услуги
   let taxRules: TaxRuleWithCategory[] = [];
   let serviceProviders: ServiceProvider[] = [];
 

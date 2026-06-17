@@ -5,7 +5,7 @@
   "maticni_broj": "17335600",
   "website": "https://www.raiffeisenbank.rs",
   "logo_color": "#FFCC00",
-  "last_updated": "2026-05-05",
+  "last_updated": "2026-06-13",
   "kyc_matrix": [
     {
       "status": "non_resident",
@@ -42,10 +42,7 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": [
-        "Загранпаспорт",
-        "ID-карта ВНЖ"
-      ],
+      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ"],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -54,9 +51,7 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": [
-        "Загранпаспорт или ID-карта ПМЖ"
-      ],
+      "required_docs": ["Загранпаспорт или ID-карта ПМЖ"],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -65,9 +60,7 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": [
-        "Лична карта (ID)"
-      ],
+      "required_docs": ["Лична карта (ID)"],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -77,9 +70,7 @@
       "is_available": false,
       "probability": "blocked",
       "required_docs": [],
-      "red_flags": [
-        "Нерезидентам бизнес-счета не открывают по внутреннему регламенту."
-      ],
+      "red_flags": ["Нерезидентам бизнес-счета не открывают по внутреннему регламенту."],
       "blocked_reasons": [
         "Нерезидентам бизнес-счета не открываются согласно внутренней политике австрийской группы RBI"
       ]
@@ -95,7 +86,7 @@
       ],
       "blocked_reasons": [
         "Внутренняя директива RBI (март 2024): граждане РФ/РБ с ВНЖ до 1 года исключены из программы открытия бизнес-счетов",
-        "Официальное основание: повышенный risk-score согласно FATF-рекомендациям для граждан стран под санкционным режимом"
+        "Официальное основание: повышенный risk-score согласно FATF-рекомендациям"
       ]
     },
     {
@@ -118,10 +109,7 @@
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": [
-        "ID-карта ПМЖ",
-        "Решение APR"
-      ],
+      "required_docs": ["ID-карта ПМЖ", "Решение APR"],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -130,1207 +118,390 @@
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": [
-        "Лична карта (ID)",
-        "Решение APR"
-      ],
+      "required_docs": ["Лична карта (ID)", "Решение APR"],
       "red_flags": [],
       "blocked_reasons": []
     }
   ],
   "products": [
     {
-      "product_id": "rf_personal_moze_start",
+      "product_id": "RAIFFEISEN_personal_STANDARD",
+      "name": "Dinarski tekući račun rezidenta",
+      "category": "personal_account",
+      "package_tier": "standard",
+      "is_multicurrency": false,
+      "supported_currencies": ["RSD"],
+      "maintenance_fee_rsd": 150,
+      "swift_in": null,
+      "swift_out": null,
+      "features": {
+        "apple_pay": true,
+        "google_pay": false,
+        "garmin_pay": true,
+        "prenesi": true,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": ["Visa"],
+        "dina_notes": "Bez naknade za osnovnu i dodatnu DinaCard"
+      },
+      "notes": "Банкомат других банков: 2%, мин. 250 RSD. Google Pay недоступен — используется RaiPay (Android)."
+    },
+    {
+      "product_id": "RAIFFEISEN_personal_IRACUN",
+      "name": "Dinarski tekući račun rezidenta - iRačun",
+      "category": "personal_account",
+      "package_tier": "standard",
+      "is_multicurrency": false,
+      "supported_currencies": ["RSD"],
+      "maintenance_fee_rsd": 0,
+      "swift_in": null,
+      "swift_out": null,
+      "features": {
+        "apple_pay": true,
+        "google_pay": false,
+        "garmin_pay": true,
+        "prenesi": true,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": ["Visa"],
+        "dina_notes": "Bez naknade"
+      },
+      "notes": "Уговара се искључиво на даљину (online). Бесплатное обслуживание."
+    },
+    {
+      "product_id": "RAIFFEISEN_personal_MOZE_START",
       "name": "Može Start paket tekući račun",
       "category": "personal_account",
       "package_tier": "basic",
-      "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "is_multicurrency": false,
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 250,
-      "maintenance_fee_condition": null,
       "swift_in": {
-        "pct": 0.4,
+        "pct": 0.40,
         "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20% (макс 50 000 RSD)"
+        "max_rsd": null,
+        "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Не извлечено из PDF. По данным комьюнити: ~0.25–0.30% через e-banking."
-      },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15% (макс 45 000 RSD)"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
+        "pct": 0.80,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "На шалтеру. E-banking: 0.20%, мин 750, макс 10.000 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "prenesi": true,
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "U okviru paketa se izdaje platna debitna kartica DinaCard"
+        "international": ["Visa"],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": null
+      "notes": "SEPA IN: 0.35% мин 250 RSD (прогрессивно). SEPA OUT: 0.80% мин 1000 RSD шалтер / 0.20% мин 750 e-banking. Может быть привязан к девизному счёту (+100 RSD/мес)."
     },
     {
-      "product_id": "rf_personal_moze_ekstra",
+      "product_id": "RAIFFEISEN_personal_MOZE_EKSTRA",
       "name": "Može Ekstra paket tekući račun",
       "category": "personal_account",
       "package_tier": "standard",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 350,
-      "maintenance_fee_condition": null,
       "swift_in": {
-        "pct": 0.4,
+        "pct": 0.40,
         "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20% (макс 50 000 RSD)"
+        "max_rsd": null,
+        "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Не извлечено из PDF"
-      },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15% (макс 45 000 RSD)"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
+        "pct": 0.80,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "На шалтеру. E-banking: 0.20%, мин 750, макс 10.000 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "prenesi": true,
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "U okviru paketa se izdaje platna debitna kartica DinaCard"
+        "international": ["Visa"],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": null
+      "notes": "Включено бесплатное ведение 1 девизного счёта."
     },
     {
-      "product_id": "rf_personal_moze_sve",
+      "product_id": "RAIFFEISEN_personal_MOZE_SVE",
       "name": "Može Sve paket tekući račun",
       "category": "personal_account",
       "package_tier": "premium",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 450,
-      "maintenance_fee_condition": null,
       "swift_in": {
-        "pct": 0.4,
+        "pct": 0.40,
         "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20% (макс 50 000 RSD)"
+        "max_rsd": null,
+        "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Не извлечено из PDF"
-      },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15% (макс 45 000 RSD)"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
+        "pct": 0.80,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "На шалтеру. E-banking: 0.20%, мин 750, макс 10.000 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "prenesi": true,
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "DinaCard. По запросу — VISA Gold Mass вместо стандартной Visa Debit."
+        "international": ["Visa"],
+        "dina_notes": "Bez naknade, включает Visa Gold Debit"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": null
+      "notes": "Включено бесплатное ведение 2+ девизных счетов. 0% на дозвольено преkoрачење до 10.000 RSD."
     },
     {
-      "product_id": "rf_personal_klub",
-      "name": "Paket tekući račun Klub",
-      "category": "personal_account",
-      "package_tier": "student",
-      "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
-      "maintenance_fee_rsd": 0,
-      "maintenance_fee_condition": "Бесплатно для клиентов до 26 лет без работы (до первой зарплаты или 26-летия)",
-      "swift_in": {
-        "pct": 0.4,
-        "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20%"
-      },
-      "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Не извлечено из PDF"
-      },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15%"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
-      },
-      "features": {
-        "apple_pay": true,
-        "google_pay": false,
-        "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
-      },
-      "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "По запросу — DinaCard и/или Visa Debit"
-      },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": "Недоступен иностранцам — требуется статус резидента до 26 лет"
-    },
-    {
-      "product_id": "rf_personal_premium",
+      "product_id": "RAIFFEISEN_personal_PREMIUM",
       "name": "Premium paket tekući račun",
       "category": "personal_account",
       "package_tier": "premium",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 1000,
-      "maintenance_fee_condition": "Бесплатно при зарплате от 150 000 RSD или депозитах/инвестициях от 50 000 EUR в банке",
+      "maintenance_fee_condition": "Besplatno pri primanjima >= 150.000 RSD ili depozit/investicije >= 30.000 EUR",
       "swift_in": {
-        "pct": 0.4,
+        "pct": 0.40,
         "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20%"
+        "max_rsd": null,
+        "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Специальный тариф Premium — не извлечён из PDF"
-      },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15%"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
+        "pct": 0.60,
+        "min_rsd": 1000,
+        "max_rsd": 35000,
+        "notes": "На шалтеру. Mobile banking: 0.15%, мин 750, макс 10.000 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "prenesi": true,
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "DinaCard и/или Visa Gold и/или Visa Platinum и/или Visa Infinite"
+        "international": ["Visa"],
+        "dina_notes": "Включает Visa Gold, Platinum, Infinite, Visa Gold Revolving"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": "Прямой контакт с сотрудником Premium-банкинга. Транзакции по специальному тарифу Premium.",
-      "atm_withdrawal_own_bank": "Бесплатно. Visa Platinum: лимит 100 000 RSD Serbia / 3 000 EUR за рубежом",
-      "atm_withdrawal_other_bank": null,
-      "notes": "Ориентирован на клиентов с высоким доходом. Для иностранцев с ВНЖ < 1 года — сложно открыть."
+      "notes": "Директан контакт са сарадником за премијум банкарство."
     },
     {
-      "product_id": "rf_personal_private_banking",
+      "product_id": "RAIFFEISEN_personal_PRIVATE",
       "name": "Paket tekući račun privatnog bankarstva",
       "category": "personal_account",
       "package_tier": "premium",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 10000,
-      "maintenance_fee_condition": "Бесплатно при депозитах/инвестициях от 200 000 EUR в банке",
+      "maintenance_fee_condition": "Besplatno pri primanjima >= 10.000 EUR ili depozit/investicije >= 500.000 EUR",
       "swift_in": {
-        "pct": 0.4,
-        "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20%"
-      },
-      "swift_out": {
-        "pct": null,
+        "pct": 0,
         "min_rsd": null,
         "max_rsd": null,
-        "notes": "Тариф Private Banking — не извлечён из PDF"
+        "notes": "Bez naknade za sve prilive"
       },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "Прогрессивная шкала аналогична другим пакетам"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
+      "swift_out": {
+        "pct": 0.50,
+        "min_rsd": 1000,
         "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
+        "notes": "На шалтеру. Mobile banking: 0.10%, мин 750, макс 10.000 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "prenesi": true,
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa Infinite",
-          "Visa Platinum",
-          "Visa Gold",
-          "Mastercard"
-        ],
-        "dina_notes": "Выпускается Visa Infinite. По запросу — DinaCard, Visa Gold, Visa Platinum."
+        "international": ["Visa"],
+        "dina_notes": "Visa Infinite — снятие в банкоматах всего мира бесплатно"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": "Персональный банкир, приоритетное обслуживание, тариф Private Banking на все транзакции.",
-      "atm_withdrawal_own_bank": "Бесплатно. Visa Infinite: лимит 100 000 RSD Serbia / 5 000 EUR за рубежом / 5 транзакций",
-      "atm_withdrawal_other_bank": null,
-      "notes": "Порог входа — 200 000 EUR активов в банке. Практически недоступен иностранцам."
+      "notes": "Private Banking. Swift IN бесплатно — уникально для физлиц."
     },
     {
-      "product_id": "rf_personal_osnovni",
-      "name": "Platni račun sa osnovnim uslugama",
-      "category": "personal_account",
+      "product_id": "RAIFFEISEN_business_BIZNIS_IRACUN",
+      "name": "Бизнис иРачун и девизни текући рачун",
+      "category": "business_account",
       "package_tier": "basic",
-      "is_multicurrency": false,
-      "supported_currencies": [
-        "RSD"
-      ],
-      "maintenance_fee_rsd": 150,
-      "maintenance_fee_condition": null,
-      "swift_in": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Только RSD-счёт, SWIFT недоступен"
-      },
-      "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Только RSD-счёт, SWIFT недоступен"
-      },
-      "sepa_in": {
-        "pct": null,
-        "min_rsd": null,
-        "notes": "Только RSD-счёт"
-      },
-      "sepa_out": {
-        "pct": null,
-        "min_rsd": null,
-        "notes": "Только RSD-счёт"
-      },
-      "features": {
-        "apple_pay": true,
-        "google_pay": false,
-        "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
-      },
-      "cards": {
-        "international": [
-          "Visa"
-        ],
-        "dina_notes": "Выпускается Visa Debit и DinaCard. По запросу можно отдельно открыть девизный счёт."
-      },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": "Базовый RSD-счёт. Девизный счёт открывается дополнительно по запросу."
-    },
-    {
-      "product_id": "rf_personal_iracun",
-      "name": "Dinarski tekući račun rezidenta — iRačun",
-      "category": "personal_account",
-      "package_tier": "standard",
+      "target": "sve",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
-      "maintenance_fee_rsd": 0,
-      "maintenance_fee_condition": "Открывается исключительно онлайн (na daljinu)",
+      "supported_currencies": ["RSD", "EUR"],
+      "maintenance_fee_rsd": 250,
+      "maintenance_fee_condition": "Первых 12 месяцев бесплатно",
       "swift_in": {
-        "pct": 0.4,
-        "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20%"
-      },
-      "swift_out": {
-        "pct": null,
+        "pct": 0,
         "min_rsd": null,
         "max_rsd": null,
-        "notes": "Не извлечено из PDF"
+        "notes": "Bez naknade"
       },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15%"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
+      "swift_out": {
+        "pct": 0.25,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "E-banking. Шалтер: 0.30% мин 1300 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
         "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "DinaCard по запросу"
+        "international": ["Visa Business"],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": "Только онлайн-открытие. Бесплатное обслуживание. Ключевой вариант для экспатов с ВНЖ 1г+."
+      "notes": "Online-счёт. SEPA IN: 0%. SEPA OUT: 0.20%, мин 800, макс 32.000 RSD. Внутренний перевод: 30 RSD. Уплата/исплата готовины недоступна."
     },
     {
-      "product_id": "rf_personal_standard",
-      "name": "Dinarski tekući račun rezidenta",
-      "category": "personal_account",
-      "package_tier": "standard",
-      "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
-      "maintenance_fee_rsd": 150,
-      "maintenance_fee_condition": null,
-      "swift_in": {
-        "pct": 0.4,
-        "min_rsd": 300,
-        "max_rsd": 50000,
-        "notes": "До 10 000 EUR — 0.40% (мин 300 RSD); 10 001–50 000 EUR — 0.30%; свыше 50 000 EUR — 0.20%"
-      },
-      "swift_out": {
-        "pct": null,
-        "min_rsd": null,
-        "max_rsd": null,
-        "notes": "Не извлечено из PDF"
-      },
-      "sepa_in": {
-        "pct": 0.35,
-        "min_rsd": 250,
-        "notes": "До 10 000 EUR — 0.35% (мин 250 RSD); 10 001–50 000 EUR — 0.25%; свыше 50 000 EUR — 0.15%"
-      },
-      "sepa_out": {
-        "pct": 0.5,
-        "min_rsd": 750,
-        "max_rsd": 30000,
-        "notes": "0.50% (мин. 750 RSD, макс. 30 000 RSD) — через приложение и в отделении. Переводы на гуманитарные счета — бесплатно."
-      },
-      "features": {
-        "apple_pay": true,
-        "google_pay": false,
-        "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
-      },
-      "cards": {
-        "international": [
-          "Visa",
-          "Mastercard"
-        ],
-        "dina_notes": "DinaCard по запросу"
-      },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "atm_withdrawal_own_bank": "Бесплатно (лимит 100 000 RSD / 5 транзакций в день)",
-      "atm_withdrawal_other_bank": null,
-      "notes": "Стандартный счёт резидента для отделения. iRačun — его онлайн-аналог без платы за обслуживание."
-    },
-    {
-      "product_id": "rf_business_preduzetnik",
-      "name": "Preduzetnik paket",
+      "product_id": "RAIFFEISEN_business_STANDARD_PREDUZETNIK",
+      "name": "Стандард Предузетник",
       "category": "business_account",
       "package_tier": "standard",
       "target": "preduzetnik",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "supported_currencies": ["RSD", "EUR"],
+      "maintenance_fee_rsd": 250,
+      "swift_in": {
+        "pct": 0,
+        "min_rsd": null,
+        "max_rsd": null,
+        "notes": "Bez naknade"
+      },
+      "swift_out": {
+        "pct": 0.25,
+        "min_rsd": 1000,
+        "max_rsd": 40000,
+        "notes": "E-banking. Шалтер: 0.30% мин 1300 RSD"
+      },
+      "features": {
+        "apple_pay": true,
+        "google_pay": false,
+        "garmin_pay": true,
+        "prenesi": false,
+        "ips_qr": true
+      },
+      "cards": {
+        "international": ["Visa Business"],
+        "dina_notes": "Bez naknade"
+      },
+      "notes": "SEPA IN: 0%. SEPA OUT: 0.20%, мин 800, макс 32.000 RSD. Внутренний перевод: 40 RSD. Уплата готовины: 0.25%."
+    },
+    {
+      "product_id": "RAIFFEISEN_business_STANDARD_PRAVNA_LICA",
+      "name": "Стандард Правна лица",
+      "category": "business_account",
+      "package_tier": "standard",
+      "target": "malo_privredno_drustvo",
+      "is_multicurrency": true,
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 500,
-      "maintenance_fee_condition": null,
       "swift_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
+        "pct": 0,
+        "min_rsd": null,
         "max_rsd": null,
-        "notes": "Зачисление на валютный счёт — бесплатно"
+        "notes": "Bez naknade"
       },
       "swift_out": {
         "pct": 0.25,
         "min_rsd": 1000,
         "max_rsd": 40000,
-        "notes": "E-banking/M-banking. В отделении: 0.30% (мин 1 300 RSD, макс 40 000 RSD). Дополнительно: 300 RSD SWIFT-издержки. IntraGroup RBI: 0.20% e-banking / 0.25% отделение."
-      },
-      "sepa_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "notes": "Зачисление из-за рубежа — бесплатно"
-      },
-      "sepa_out": {
-        "pct": 0.2,
-        "min_rsd": 800,
-        "max_rsd": 32000,
-        "notes": "E-banking/M-banking. Дополнительно: 240 RSD SEPA-издержки. В отделении: 0.25% (мин 1 200 RSD, макс 36 000 RSD + 240 RSD)"
+        "notes": "E-banking. Шалтер: 0.30% мин 1300 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
         "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa Business Debit",
-          "Visa Business Gold"
-        ],
-        "dina_notes": "DinaCard Business Debit"
+        "international": ["Visa Business"],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "internal_transfer_fee_rsd": 30,
-      "internal_transfer_fee_condition": "Между двумя счетами одного клиента — бесплатно",
-      "cash_deposit_fee_pct": null,
-      "cash_withdrawal_fee_pct": 0,
-      "monthly_free_transactions": null,
-      "notes": "Лимит бизнес-карты: 150 000 RSD / 5 транзакций в день (Сербия); 2 000 EUR / 3 транзакции (за рубежом)"
+      "notes": "SEPA IN: 0%. SEPA OUT: 0.20%, мин 800, макс 32.000 RSD. Внутренний перевод: 40 RSD."
     },
     {
-      "product_id": "rf_business_preduzetnik_plus",
-      "name": "Preduzetnik plus paket",
+      "product_id": "RAIFFEISEN_business_GOLD",
+      "name": "Голд пакет",
       "category": "business_account",
       "package_tier": "premium",
-      "target": "preduzetnik",
+      "target": "sve",
       "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
-      "maintenance_fee_rsd": 900,
-      "maintenance_fee_condition": null,
-      "swift_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "max_rsd": null,
-        "notes": "Зачисление на валютный счёт — бесплатно"
-      },
-      "swift_out": {
-        "pct": 0.25,
-        "min_rsd": 1000,
-        "max_rsd": 40000,
-        "notes": "E-banking/M-banking. В отделении: 0.30% (мин 1 300 RSD, макс 40 000 RSD). Дополнительно: 300 RSD SWIFT-издержки. IntraGroup RBI: 0.20% e-banking / 0.25% отделение."
-      },
-      "sepa_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "notes": "Зачисление из-за рубежа — бесплатно"
-      },
-      "sepa_out": {
-        "pct": 0.2,
-        "min_rsd": 800,
-        "max_rsd": 32000,
-        "notes": "E-banking/M-banking. Дополнительно: 240 RSD SEPA-издержки. В отделении: 0.25% (мин 1 200 RSD, макс 36 000 RSD + 240 RSD)"
-      },
-      "features": {
-        "apple_pay": true,
-        "google_pay": false,
-        "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
-      },
-      "cards": {
-        "international": [
-          "Visa Business Debit",
-          "Visa Business Gold"
-        ],
-        "dina_notes": "DinaCard Business Debit"
-      },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "internal_transfer_fee_rsd": 30,
-      "internal_transfer_fee_condition": "Между двумя счетами одного клиента — бесплатно",
-      "cash_deposit_fee_pct": null,
-      "cash_withdrawal_fee_pct": 0,
-      "monthly_free_transactions": null,
-      "notes": null
-    },
-    {
-      "product_id": "rf_business_gold",
-      "name": "Gold paket",
-      "category": "business_account",
-      "package_tier": "premium",
-      "target": "preduzetnik",
-      "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
+      "supported_currencies": ["RSD", "EUR"],
       "maintenance_fee_rsd": 1500,
-      "maintenance_fee_condition": null,
       "swift_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
+        "pct": 0,
+        "min_rsd": null,
         "max_rsd": null,
-        "notes": "Зачисление на валютный счёт — бесплатно"
+        "notes": "Bez naknade"
       },
       "swift_out": {
-        "pct": 0.25,
+        "pct": 0.15,
         "min_rsd": 1000,
         "max_rsd": 40000,
-        "notes": "E-banking/M-banking. В отделении: 0.30% (мин 1 300 RSD, макс 40 000 RSD). Дополнительно: 300 RSD SWIFT-издержки. IntraGroup RBI: 0.20% e-banking / 0.25% отделение."
-      },
-      "sepa_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "notes": "Зачисление из-за рубежа — бесплатно"
-      },
-      "sepa_out": {
-        "pct": 0.2,
-        "min_rsd": 800,
-        "max_rsd": 32000,
-        "notes": "E-banking/M-banking. Дополнительно: 240 RSD SEPA-издержки. В отделении: 0.25% (мин 1 200 RSD, макс 36 000 RSD + 240 RSD)"
+        "notes": "E-banking. Шалтер: 0.20% мин 1300 RSD"
       },
       "features": {
         "apple_pay": true,
         "google_pay": false,
         "garmin_pay": true,
         "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
+        "ips_qr": true
       },
       "cards": {
-        "international": [
-          "Visa Business Debit",
-          "Visa Business Gold"
-        ],
-        "dina_notes": "DinaCard Business Debit"
+        "international": ["Visa Business"],
+        "dina_notes": "Bez naknade"
       },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "internal_transfer_fee_rsd": 30,
-      "internal_transfer_fee_condition": "Между двумя счетами одного клиента — бесплатно",
-      "cash_deposit_fee_pct": null,
-      "cash_withdrawal_fee_pct": 0,
-      "monthly_free_transactions": null,
-      "notes": null
+      "notes": "Лучший Swift OUT среди бизнес-пакетов Raiffeisen: 0.15%. SEPA OUT: 0.12%, мин 800, макс 32.000 RSD."
     },
     {
-      "product_id": "rf_business_iracun",
-      "name": "Biznis iRačun",
-      "category": "business_account",
-      "package_tier": "basic",
-      "target": "preduzetnik",
-      "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
-      "maintenance_fee_rsd": 250,
-      "maintenance_fee_condition": "Бесплатно первые 12 месяцев с даты открытия",
-      "swift_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "max_rsd": null,
-        "notes": "Зачисление на валютный счёт — бесплатно"
-      },
-      "swift_out": {
-        "pct": 0.25,
-        "min_rsd": 1000,
-        "max_rsd": 40000,
-        "notes": "E-banking/M-banking. В отделении: 0.30% (мин 1 300 RSD, макс 40 000 RSD). Дополнительно: 300 RSD SWIFT-издержки. IntraGroup RBI: 0.20% e-banking / 0.25% отделение."
-      },
-      "sepa_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "notes": "Зачисление из-за рубежа — бесплатно"
-      },
-      "sepa_out": {
-        "pct": 0.2,
-        "min_rsd": 800,
-        "max_rsd": 32000,
-        "notes": "E-banking/M-banking. Дополнительно: 240 RSD SEPA-издержки. В отделении: 0.25% (мин 1 200 RSD, макс 36 000 RSD + 240 RSD)"
-      },
-      "features": {
-        "apple_pay": true,
-        "google_pay": false,
-        "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
-      },
-      "cards": {
-        "international": [
-          "Visa Business Debit",
-          "Visa Business Gold"
-        ],
-        "dina_notes": "DinaCard Business Debit"
-      },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": "Бесплатное обслуживание первый год. Лучший вариант для старта ИП.",
-      "internal_transfer_fee_rsd": 30,
-      "internal_transfer_fee_condition": "Между двумя счетами одного клиента — бесплатно",
-      "cash_deposit_fee_pct": null,
-      "cash_withdrawal_fee_pct": 0,
-      "monthly_free_transactions": null,
-      "notes": "SWIFT in 0% — ключевое преимущество для фрилансеров получающих платежи из-за рубежа"
-    },
-    {
-      "product_id": "rf_business_osnovni",
-      "name": "Dinarski platni račun (базовый бизнес)",
-      "category": "business_account",
-      "package_tier": "basic",
-      "target": "preduzetnik",
-      "is_multicurrency": true,
-      "supported_currencies": [
-        "RSD",
-        "EUR"
-      ],
-      "maintenance_fee_rsd": 250,
-      "maintenance_fee_condition": null,
-      "swift_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "max_rsd": null,
-        "notes": "Зачисление на валютный счёт — бесплатно"
-      },
-      "swift_out": {
-        "pct": 0.25,
-        "min_rsd": 1000,
-        "max_rsd": 40000,
-        "notes": "E-banking/M-banking. В отделении: 0.30% (мин 1 300 RSD, макс 40 000 RSD). Дополнительно: 300 RSD SWIFT-издержки. IntraGroup RBI: 0.20% e-banking / 0.25% отделение."
-      },
-      "sepa_in": {
-        "pct": 0.0,
-        "min_rsd": 0,
-        "notes": "Зачисление из-за рубежа — бесплатно"
-      },
-      "sepa_out": {
-        "pct": 0.2,
-        "min_rsd": 800,
-        "max_rsd": 32000,
-        "notes": "E-banking/M-banking. Дополнительно: 240 RSD SEPA-издержки. В отделении: 0.25% (мин 1 200 RSD, макс 36 000 RSD + 240 RSD)"
-      },
-      "features": {
-        "apple_pay": true,
-        "google_pay": false,
-        "garmin_pay": true,
-        "prenesi": false,
-        "ips_qr": true,
-        "contactless": true
-      },
-      "cards": {
-        "international": [
-          "Visa Business Debit",
-          "Visa Business Gold"
-        ],
-        "dina_notes": "DinaCard Business Debit"
-      },
-      "card_issue_days": null,
-      "cashback": "Нет",
-      "bonuses": null,
-      "internal_transfer_fee_rsd": 30,
-      "internal_transfer_fee_condition": "Между двумя счетами одного клиента — бесплатно",
-      "cash_deposit_fee_pct": null,
-      "cash_withdrawal_fee_pct": 0,
-      "monthly_free_transactions": null,
-      "notes": null
-    },
-    {
-      "product_id": "rf_mortgage_variable_gold",
-      "name": "Stambeni kredit EUR — promenljiva kamatna stopa (Gold tarifa)",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "variable",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.3,
-      "rate_fixed_period_years": null,
-      "rate_approx_total_pct": 4.314,
-      "loan_term_years": [
-        6,
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": 80,
-      "min_down_payment_pct": 20,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 350000,
-      "early_repayment_fee_pct": 0,
-      "processing_fee_pct": 2,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Gold тариф: маржа 2.30% + 3M EURIBOR. Для клиентов с зарплатным проектом в Raiffeisen."
-    },
-    {
-      "product_id": "rf_mortgage_variable_standard",
-      "name": "Stambeni kredit EUR — promenljiva kamatna stopa (Standard tarifa)",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "variable",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.45,
-      "rate_fixed_period_years": null,
-      "rate_approx_total_pct": 4.503,
-      "loan_term_years": [
-        6,
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": 80,
-      "min_down_payment_pct": 20,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 350000,
-      "early_repayment_fee_pct": 0,
-      "processing_fee_pct": 2,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Standard тариф: маржа 2.45% + 3M EURIBOR."
-    },
-    {
-      "product_id": "rf_mortgage_combined_5y_gold",
-      "name": "Stambeni kredit EUR — kombinovana, fiksna 5 godina (Gold tarifa)",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "combined",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.4,
-      "rate_fixed_period_years": 5,
-      "rate_approx_total_pct": 4.2,
-      "loan_term_years": [
-        6,
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": 80,
-      "min_down_payment_pct": 20,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 350000,
-      "early_repayment_fee_pct": 0,
-      "processing_fee_pct": 2,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Фиксированная ставка 5 лет, затем переменная (3M EURIBOR + 2.40%). Gold тариф."
-    },
-    {
-      "product_id": "rf_mortgage_combined_5y_standard",
-      "name": "Stambeni kredit EUR — kombinovana, fiksna 5 godina (Standard tarifa)",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "combined",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.55,
-      "rate_fixed_period_years": 5,
-      "rate_approx_total_pct": 4.2,
-      "loan_term_years": [
-        6,
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": 80,
-      "min_down_payment_pct": 20,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 350000,
-      "early_repayment_fee_pct": 0,
-      "processing_fee_pct": 2,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Фиксированная ставка 5 лет, затем переменная (3M EURIBOR + 2.55%). Standard тариф."
-    },
-    {
-      "product_id": "rf_mortgage_combined_10y_gold",
-      "name": "Stambeni kredit EUR — kombinovana, fiksna 10 godina (Gold tarifa)",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "combined",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.55,
-      "rate_fixed_period_years": 10,
-      "rate_approx_total_pct": 4.5,
-      "loan_term_years": [
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": 80,
-      "min_down_payment_pct": 20,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 350000,
-      "early_repayment_fee_pct": 0,
-      "processing_fee_pct": 2,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Фиксированная ставка 10 лет, затем переменная (3M EURIBOR + 2.55%). Gold тариф."
-    },
-    {
-      "product_id": "rf_mortgage_combined_10y_standard",
-      "name": "Stambeni kredit EUR — kombinovana, fiksna 10 godina (Standard tarifa)",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "combined",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.65,
-      "rate_fixed_period_years": 10,
-      "rate_approx_total_pct": 4.5,
-      "loan_term_years": [
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": 80,
-      "min_down_payment_pct": 20,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 350000,
-      "early_repayment_fee_pct": 0,
-      "processing_fee_pct": 2,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Фиксированная ставка 10 лет, затем переменная (3M EURIBOR + 2.65%). Standard тариф."
-    },
-    {
-      "product_id": "rf_mortgage_youth_subsidized",
-      "name": "Kredit za kupovinu stana — subvencionisana kamatna stopa za mlade",
-      "category": "credit_mortgage",
-      "currency": "EUR",
-      "rate_type": "combined",
-      "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.0,
-      "rate_fixed_period_years": 6,
-      "rate_approx_total_pct": 1.5,
-      "loan_term_years": [
-        10,
-        15,
-        20,
-        25,
-        30
-      ],
-      "max_ltv_pct": null,
-      "min_down_payment_pct": null,
-      "min_amount_eur": 10000,
-      "max_amount_eur": 100000,
-      "early_repayment_fee_pct": null,
-      "processing_fee_pct": 0,
-      "insurance_required": [
-        "Osiguranje nekretnine"
-      ],
-      "notes": "Государственная программа для молодёжи. Фиксированная 1.5% первые 6 лет, затем 3M EURIBOR + 2.00%. Недоступен иностранцам."
-    },
-    {
-      "product_id": "rf_loan_gotovinski",
-      "name": "Dinarski gotovinski kredit sa fiksnom kamatnom stopom",
-      "category": "credit_consumer",
-      "purpose": "general",
-      "currency": "RSD",
-      "rate_approx_pct": 7.5,
-      "rate_type": "fixed",
-      "loan_term_months": [
-        6,
-        12,
-        24,
-        36,
-        48,
-        60,
-        70
-      ],
-      "min_amount_rsd": 80000,
-      "max_amount_rsd": 4000000,
-      "min_amount_eur": null,
-      "max_amount_eur": null,
-      "early_repayment_fee_pct": null,
-      "processing_fee_pct": 3,
-      "income_requirement": "До 100 000 RSD/мес",
-      "notes": "~683–34 188 EUR. Для нерезидентов и ВНЖ < 1 года — отказ."
-    },
-    {
-      "product_id": "rf_loan_refinancing",
-      "name": "Dinarski gotovinski kredit za refinansiranje",
-      "category": "credit_consumer",
-      "purpose": "refinancing",
-      "currency": "RSD",
-      "rate_approx_pct": 7.5,
-      "rate_type": "fixed",
-      "loan_term_months": [
-        6,
-        12,
-        24,
-        36,
-        48,
-        60,
-        70
-      ],
-      "min_amount_rsd": 80000,
-      "max_amount_rsd": 4000000,
-      "min_amount_eur": null,
-      "max_amount_eur": null,
-      "early_repayment_fee_pct": null,
-      "processing_fee_pct": 3,
-      "income_requirement": "До 100 000 RSD/мес",
-      "notes": "Рефинансирование обязательств в Raiffeisen и других банках"
-    },
-    {
-      "product_id": "rf_loan_auto_rsd",
-      "name": "Dinarski auto kredit",
-      "category": "credit_consumer",
-      "purpose": "auto",
-      "currency": "RSD",
-      "rate_approx_pct": 6.99,
-      "rate_type": "fixed",
-      "loan_term_months": [
-        12,
-        24,
-        36,
-        48,
-        60,
-        70
-      ],
-      "min_amount_rsd": 120000,
-      "max_amount_rsd": 5000000,
-      "min_amount_eur": null,
-      "max_amount_eur": null,
-      "early_repayment_fee_pct": null,
-      "processing_fee_pct": 5,
-      "income_requirement": "До 100 000 RSD/мес",
-      "notes": "Залог на авто при сумме свыше 3 000 001 RSD. Новые и подержанные автомобили."
-    },
-    {
-      "product_id": "rf_loan_auto_eur",
-      "name": "Kredit za kupovinu vozila indeksiran u EUR",
-      "category": "credit_consumer",
-      "purpose": "auto",
-      "currency": "EUR",
-      "rate_approx_pct": 6.5,
-      "rate_type": "fixed",
-      "loan_term_months": [
-        12,
-        24,
-        36,
-        48,
-        60
-      ],
-      "min_amount_rsd": null,
-      "max_amount_rsd": null,
-      "min_amount_eur": 1000,
-      "max_amount_eur": 50000,
-      "early_repayment_fee_pct": null,
-      "processing_fee_pct": 5,
-      "income_requirement": null,
-      "notes": "Ставка варьируется от 3.00% до 10.00% в зависимости от профиля клиента"
-    },
-    {
-      "product_id": "rf_loan_web",
-      "name": "Web dinarski potrošački kredit",
-      "category": "credit_consumer",
-      "purpose": "general",
-      "currency": "RSD",
-      "rate_approx_pct": 10.0,
-      "rate_type": "fixed",
-      "loan_term_months": [
-        6,
-        12,
-        24,
-        36
-      ],
-      "min_amount_rsd": 8000,
-      "max_amount_rsd": 400000,
-      "min_amount_eur": null,
-      "max_amount_eur": null,
-      "early_repayment_fee_pct": null,
-      "processing_fee_pct": 10,
-      "income_requirement": null,
-      "notes": "Только онлайн-подача заявки. Ставка: 5%–15%. Небольшие суммы для онлайн-покупок."
-    },
-    {
-      "product_id": "rf_stednja_rsd",
-      "name": "Oročeni dinarski depozit",
+      "product_id": "RAIFFEISEN_stednja_RSD_OROCENA",
+      "name": "Oročeni depozit bez posebne namene (RSD)",
       "category": "savings_deposit",
       "deposit_type": "orocena",
-      "currencies": [
-        "RSD"
+      "currencies": ["RSD"],
+      "terms": [
+        { "term_months": 12, "rate_pct": 1.00, "early_withdrawal_penalty_pct": 100 }
       ],
-      "terms": [],
       "tax_on_interest_pct": 0,
-      "tax_note": "RSD-вклады освобождены от налога на процентный доход",
-      "capitalization": null,
-      "auto_renewal": null,
+      "tax_note": "RSD — 0%, банк является налоговым агентом",
       "is_available_non_resident": true,
-      "online_opening": null,
-      "notes": "По истечении срока: перевод на другой счёт (резиденты и нерезиденты) или выдача наличными (только резиденты)"
+      "notes": "Мин. сумма 20.000 RSD. При досрочном расторжении — потеря всех процентов. Ставки у Raiffeisen ниже рынка."
     },
     {
-      "product_id": "rf_stednja_eur",
-      "name": "Oročeni devizni depozit (EUR/USD)",
+      "product_id": "RAIFFEISEN_stednja_EUR_OROCENA",
+      "name": "Devizni oročeni depoziti (EUR)",
       "category": "savings_deposit",
       "deposit_type": "orocena",
-      "currencies": [
-        "EUR",
-        "USD"
+      "currencies": ["EUR"],
+      "terms": [
+        { "term_months": 3, "rate_pct": 0.11, "early_withdrawal_penalty_pct": 100 },
+        { "term_months": 12, "rate_pct": 0.11, "early_withdrawal_penalty_pct": 100 }
       ],
-      "terms": [],
       "tax_on_interest_pct": 15,
-      "tax_note": "EUR/USD — 15% налог на процентный доход. Банк — налоговый агент.",
-      "capitalization": null,
-      "auto_renewal": null,
+      "tax_note": "EUR/USD — 15% налог, банк является налоговым агентом",
       "is_available_non_resident": true,
-      "online_opening": null,
-      "notes": "По истечении срока: перевод или выдача наличными (только резиденты)"
-    },
-    {
-      "product_id": "rf_depozit_namenski",
-      "name": "Dinarski depoziti po viđenju sa posebnom namenom",
-      "category": "savings_deposit",
-      "deposit_type": "namenski",
-      "currencies": [
-        "RSD"
-      ],
-      "terms": [],
-      "tax_on_interest_pct": 0,
-      "tax_note": "RSD — 0% налог",
-      "capitalization": null,
-      "auto_renewal": null,
-      "is_available_non_resident": null,
-      "online_opening": null,
-      "notes": "Целевой счёт. Снятие: наличными в кассе или безналичным переводом"
+      "notes": "Мин. сумма 500 EUR. Продукт более не доступен для новых вкладов — только автопролонгация старых договоров (до 17.02.2016)."
     },
     {
       "product_id": "rf_bonds_gov",
@@ -1340,51 +511,118 @@
       "available_via_bank": true,
       "min_residency_status": "resident_less_1y",
       "instrument_type": "RS_GOV",
-      "currencies_available": [
-        "EUR",
-        "RSD"
-      ],
+      "currencies_available": ["EUR", "RSD"],
       "yield_eur_approx_pct": 4.0,
       "yield_rsd_approx_pct": 6.5,
       "tax_on_coupon_pct": 0,
       "tax_on_capital_gains_pct": 0,
-      "tax_note": "Купоны и прирост капитала по гособлигациям Сербии полностью освобождены от налогов для физических лиц.",
+      "tax_note": "Купоны и прирост капитала по гособлигациям Сербии — 0% налог для физлиц.",
       "entry_fee_pct": 1.0,
       "custody_fee_pct_annual": 0.5,
       "coupon_collection_fee_pct": 0.25,
       "min_investment_eur": 1000,
-      "access_note": "Покупка только в отделении банка (BELEX / NBS аукционы). Онлайн-покупка недоступна.",
-      "red_flags": [
-        "Высокая комиссия за вход делает инвестицию убыточной на срок менее 2–3 лет.",
-        "В отделениях может не быть специалиста — лучше звонить заранее."
-      ],
-      "notes": "Минимальный срок аукционов: 2 года. Купоны выплачиваются раз в 6 месяцев."
+      "notes": "Покупка только в отделении. Купоны — раз в 6 месяцев. Высокая комиссия за вход окупается только на 2+ лет."
+    },
+    {
+      "product_id": "RAIFFEISEN_mortgage_KOMBINOVANA_5G_GOLD",
+      "name": "Stambeni kredit kombinovana stopa fiksna 5 godina – Gold",
+      "category": "credit_mortgage",
+      "currency": "EUR",
+      "rate_type": "combined",
+      "rate_base": "EURIBOR 3M",
+      "rate_margin_pct": 2.40,
+      "rate_fixed_period_years": 5,
+      "rate_approx_total_pct": 4.20,
+      "loan_term_years": [],
+      "max_ltv_pct": 80,
+      "min_down_payment_pct": 20,
+      "min_amount_eur": 10000,
+      "max_amount_eur": 350000,
+      "early_repayment_fee_pct": 0,
+      "processing_fee_pct": 0,
+      "notes": "Без накнаде за обраду. Без превремене отплате. Gold tarifa (при наличии Gold бизнес-пакета)."
+    },
+    {
+      "product_id": "RAIFFEISEN_mortgage_PROMENLJIVA_GOLD",
+      "name": "Stambeni kredit promenljiva stopa – Gold",
+      "category": "credit_mortgage",
+      "currency": "EUR",
+      "rate_type": "variable",
+      "rate_base": "EURIBOR 3M",
+      "rate_margin_pct": 2.30,
+      "rate_approx_total_pct": 4.31,
+      "loan_term_years": [],
+      "max_ltv_pct": 80,
+      "min_down_payment_pct": 20,
+      "min_amount_eur": 10000,
+      "max_amount_eur": 350000,
+      "early_repayment_fee_pct": 0,
+      "processing_fee_pct": 0,
+      "notes": "Лучшая ипотечная ставка Raiffeisen. Переменная: EURIBOR 3M + 2.30%."
+    },
+    {
+      "product_id": "RAIFFEISEN_mortgage_SUBVENCIJA_MLADI",
+      "name": "Subvencionisani stambeni kredit za mlade",
+      "category": "credit_mortgage",
+      "currency": "EUR",
+      "rate_type": "combined",
+      "rate_base": "EURIBOR 3M",
+      "rate_margin_pct": 2.00,
+      "rate_fixed_period_years": 6,
+      "rate_approx_total_pct": 1.50,
+      "loan_term_years": [],
+      "max_ltv_pct": 99,
+      "min_down_payment_pct": 1,
+      "min_amount_eur": 10000,
+      "max_amount_eur": 100000,
+      "early_repayment_fee_pct": 0,
+      "processing_fee_pct": 0,
+      "notes": "Молодёжь 20–35 лет. Государство субсидирует 2.00%, клиент платит 1.50%. Обеспечена гарантией Республики Сербии. Недоступна иностранцам."
+    },
+    {
+      "product_id": "RAIFFEISEN_loan_GOTOVINSKI",
+      "name": "Dinarski gotovinski kredit sa fiksnom kamatnom stopom",
+      "category": "credit_consumer",
+      "purpose": "general",
+      "currency": "RSD",
+      "rate_approx_pct": 7.90,
+      "rate_type": "fixed",
+      "loan_term_months": [],
+      "min_amount_rsd": 80000,
+      "max_amount_rsd": 4000000,
+      "early_repayment_fee_pct": 0,
+      "processing_fee_pct": 0,
+      "notes": "7.90% при переводе зарплаты. Без перевода: 11.90%. Для нерезидентов — отказ."
+    },
+    {
+      "product_id": "RAIFFEISEN_loan_AUTO_NOVI_EUR",
+      "name": "Auto kredit za kupovinu novih vozila (EUR)",
+      "category": "credit_consumer",
+      "purpose": "auto",
+      "currency": "EUR",
+      "rate_approx_pct": 5.49,
+      "rate_type": "fixed",
+      "loan_term_months": [],
+      "min_amount_eur": 1000,
+      "max_amount_eur": 50000,
+      "early_repayment_fee_pct": 0,
+      "processing_fee_pct": 1.99,
+      "notes": "Мин. взнос 30%. Залог на авто при сумме > 25.000 EUR."
     },
     {
       "product_id": "rf_transfer_swift",
       "name": "Международный перевод SWIFT",
       "category": "transfer",
-      "available_directions": [
-        "incoming",
-        "outgoing"
-      ],
+      "available_directions": ["incoming", "outgoing"],
       "outgoing_resident_restriction": "Нерезиденты и ВНЖ < 1 года — только в отделении, нужен инвойс/контракт",
       "outgoing_resident_1y_plus": "Без документальных ограничений через приложение",
-      "fee_incoming_pct": 0.4,
-      "fee_incoming_min_rsd": 500,
-      "fee_outgoing_pct": 0.8,
-      "fee_outgoing_min_rsd": 1200,
+      "fee_incoming_pct": 0.40,
+      "fee_incoming_min_rsd": 300,
+      "fee_outgoing_pct": 0.80,
+      "fee_outgoing_min_rsd": 1000,
       "fee_outgoing_max_rsd": 40000,
-      "supported_currencies": [
-        "EUR",
-        "USD",
-        "CHF",
-        "GBP"
-      ],
-      "correspondent_banks": [
-        "Raiffeisen Bank International (Vienna)"
-      ],
-      "notes": "USD-переводы конвертируются через корреспондентский счёт в RBI Vienna. Задержки до 3 рабочих дней."
+      "supported_currencies": ["EUR", "USD", "CHF", "GBP"],
+      "notes": "E-banking исходящий: 0.20%, мин 750, макс 10.000 RSD. USD конвертируется через RBI Vienna."
     }
   ]
 }
