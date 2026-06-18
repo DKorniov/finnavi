@@ -2,13 +2,39 @@
 import { cookies } from "next/headers";
 import { ResidencyProvider } from "@/components/ResidencyProvider";
 import { StickyHeader } from "@/components/StickyHeader";
-import { OnboardingSheet } from "@/components/OnboardingSheet"; // ← новый импорт
+import { OnboardingSheet } from "@/components/OnboardingSheet";
 import type { ResidencyStatus, LegalType } from "@/types/bank";
+import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata = {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://finnavi.rs";
+
+export const metadata: Metadata = {
   title: "ExpatFinance Navigator — Финансовый хаб в Сербии",
-  description: "Агрегатор банковских, инвестиционных и налоговых продуктов для экспатов",
+  description: "Матрица банков по вашему ВНЖ, сравнение вкладов и брокеров, справочник по налогам. На основе официальных тарифов и опыта экспат-сообщества.",
+  metadataBase: new URL(BASE_URL),
+  openGraph: {
+    type: "website",
+    url: BASE_URL,
+    siteName: "ExpatFinance Navigator",
+    title: "ExpatFinance Navigator — Финансы в Сербии без месяца поиска по форумам",
+    description: "Матрица банков по вашему ВНЖ, сравнение вкладов и брокеров, справочник по налогам.",
+    images: [
+      {
+        url: "/og-image.png",   // → public/og-image.png, 1200×630px
+        width: 1200,
+        height: 630,
+        alt: "ExpatFinance Navigator",
+      },
+    ],
+    locale: "ru_RU",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ExpatFinance Navigator — Финансы в Сербии",
+    description: "Матрица банков по вашему ВНЖ, сравнение вкладов и брокеров, справочник по налогам.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default async function RootLayout({

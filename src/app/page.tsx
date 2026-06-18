@@ -27,8 +27,11 @@ export default async function HomePage({
   const status = (cookieStore.get("expat_status")?.value || "non_resident") as ResidencyStatus;
   const legalType = (cookieStore.get("expat_legal_type")?.value || "individual") as LegalType;
 
-  const [allItems, brokers] = await Promise.all([
+  // businessItems запрашиваем всегда с legalType='business' —
+  // вкладка РКО не зависит от глобального cookie пользователя
+  const [allItems, businessItems, brokers] = await Promise.all([
     getMatrixItemsForStatus(status, legalType),
+    getMatrixItemsForStatus(status, 'business'),
     getAllBrokers(),
   ]);
 
@@ -62,6 +65,7 @@ export default async function HomePage({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <MainTabsClient
         allItems={allItems}
+        businessItems={businessItems}
         currentStatus={status}
         taxRules={taxRules}
         serviceProviders={serviceProviders}

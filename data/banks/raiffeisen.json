@@ -42,7 +42,10 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Загранпаспорт", "ID-карта ВНЖ"],
+      "required_docs": [
+        "Загранпаспорт",
+        "ID-карта ВНЖ"
+      ],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -51,7 +54,9 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Загранпаспорт или ID-карта ПМЖ"],
+      "required_docs": [
+        "Загранпаспорт или ID-карта ПМЖ"
+      ],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -60,7 +65,9 @@
       "legal_type": "individual",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Лична карта (ID)"],
+      "required_docs": [
+        "Лична карта (ID)"
+      ],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -70,7 +77,9 @@
       "is_available": false,
       "probability": "blocked",
       "required_docs": [],
-      "red_flags": ["Нерезидентам бизнес-счета не открывают по внутреннему регламенту."],
+      "red_flags": [
+        "Нерезидентам бизнес-счета не открывают по внутреннему регламенту."
+      ],
       "blocked_reasons": [
         "Нерезидентам бизнес-счета не открываются согласно внутренней политике австрийской группы RBI"
       ]
@@ -109,7 +118,10 @@
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["ID-карта ПМЖ", "Решение APR"],
+      "required_docs": [
+        "ID-карта ПМЖ",
+        "Решение APR"
+      ],
       "red_flags": [],
       "blocked_reasons": []
     },
@@ -118,7 +130,10 @@
       "legal_type": "business",
       "is_available": true,
       "probability": "high",
-      "required_docs": ["Лична карта (ID)", "Решение APR"],
+      "required_docs": [
+        "Лична карта (ID)",
+        "Решение APR"
+      ],
       "red_flags": [],
       "blocked_reasons": []
     }
@@ -130,7 +145,9 @@
       "category": "personal_account",
       "package_tier": "standard",
       "is_multicurrency": false,
-      "supported_currencies": ["RSD"],
+      "supported_currencies": [
+        "RSD"
+      ],
       "maintenance_fee_rsd": 150,
       "swift_in": null,
       "swift_out": null,
@@ -142,7 +159,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Bez naknade za osnovnu i dodatnu DinaCard"
       },
       "notes": "Банкомат других банков: 2%, мин. 250 RSD. Google Pay недоступен — используется RaiPay (Android)."
@@ -153,7 +172,9 @@
       "category": "personal_account",
       "package_tier": "standard",
       "is_multicurrency": false,
-      "supported_currencies": ["RSD"],
+      "supported_currencies": [
+        "RSD"
+      ],
       "maintenance_fee_rsd": 0,
       "swift_in": null,
       "swift_out": null,
@@ -165,7 +186,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "Уговара се искључиво на даљину (online). Бесплатное обслуживание."
@@ -176,16 +199,19 @@
       "category": "personal_account",
       "package_tier": "basic",
       "is_multicurrency": false,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 250,
       "swift_in": {
-        "pct": 0.40,
+        "pct": 0.4,
         "min_rsd": 300,
         "max_rsd": null,
         "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": 0.80,
+        "pct": 0.8,
         "min_rsd": 1000,
         "max_rsd": 40000,
         "notes": "На шалтеру. E-banking: 0.20%, мин 750, макс 10.000 RSD"
@@ -198,7 +224,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "SEPA IN: 0.35% мин 250 RSD (прогрессивно). SEPA OUT: 0.80% мин 1000 RSD шалтер / 0.20% мин 750 e-banking. Может быть привязан к девизному счёту (+100 RSD/мес)."
@@ -209,16 +237,19 @@
       "category": "personal_account",
       "package_tier": "standard",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 350,
       "swift_in": {
-        "pct": 0.40,
+        "pct": 0.4,
         "min_rsd": 300,
         "max_rsd": null,
         "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": 0.80,
+        "pct": 0.8,
         "min_rsd": 1000,
         "max_rsd": 40000,
         "notes": "На шалтеру. E-banking: 0.20%, мин 750, макс 10.000 RSD"
@@ -231,7 +262,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "Включено бесплатное ведение 1 девизного счёта."
@@ -242,16 +275,19 @@
       "category": "personal_account",
       "package_tier": "premium",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 450,
       "swift_in": {
-        "pct": 0.40,
+        "pct": 0.4,
         "min_rsd": 300,
         "max_rsd": null,
         "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": 0.80,
+        "pct": 0.8,
         "min_rsd": 1000,
         "max_rsd": 40000,
         "notes": "На шалтеру. E-banking: 0.20%, мин 750, макс 10.000 RSD"
@@ -264,7 +300,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Bez naknade, включает Visa Gold Debit"
       },
       "notes": "Включено бесплатное ведение 2+ девизных счетов. 0% на дозвольено преkoрачење до 10.000 RSD."
@@ -275,17 +313,20 @@
       "category": "personal_account",
       "package_tier": "premium",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 1000,
       "maintenance_fee_condition": "Besplatno pri primanjima >= 150.000 RSD ili depozit/investicije >= 30.000 EUR",
       "swift_in": {
-        "pct": 0.40,
+        "pct": 0.4,
         "min_rsd": 300,
         "max_rsd": null,
         "notes": "0.3% za 10.001-50.000 EUR, 0.2% max 50.000 RSD za preko 50.000 EUR"
       },
       "swift_out": {
-        "pct": 0.60,
+        "pct": 0.6,
         "min_rsd": 1000,
         "max_rsd": 35000,
         "notes": "На шалтеру. Mobile banking: 0.15%, мин 750, макс 10.000 RSD"
@@ -298,7 +339,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Включает Visa Gold, Platinum, Infinite, Visa Gold Revolving"
       },
       "notes": "Директан контакт са сарадником за премијум банкарство."
@@ -309,7 +352,10 @@
       "category": "personal_account",
       "package_tier": "premium",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 10000,
       "maintenance_fee_condition": "Besplatno pri primanjima >= 10.000 EUR ili depozit/investicije >= 500.000 EUR",
       "swift_in": {
@@ -319,7 +365,7 @@
         "notes": "Bez naknade za sve prilive"
       },
       "swift_out": {
-        "pct": 0.50,
+        "pct": 0.5,
         "min_rsd": 1000,
         "max_rsd": 30000,
         "notes": "На шалтеру. Mobile banking: 0.10%, мин 750, макс 10.000 RSD"
@@ -332,7 +378,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa"],
+        "international": [
+          "Visa"
+        ],
         "dina_notes": "Visa Infinite — снятие в банкоматах всего мира бесплатно"
       },
       "notes": "Private Banking. Swift IN бесплатно — уникально для физлиц."
@@ -344,7 +392,10 @@
       "package_tier": "basic",
       "target": "sve",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 250,
       "maintenance_fee_condition": "Первых 12 месяцев бесплатно",
       "swift_in": {
@@ -367,7 +418,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa Business"],
+        "international": [
+          "Visa Business"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "Online-счёт. SEPA IN: 0%. SEPA OUT: 0.20%, мин 800, макс 32.000 RSD. Внутренний перевод: 30 RSD. Уплата/исплата готовины недоступна."
@@ -379,7 +432,10 @@
       "package_tier": "standard",
       "target": "preduzetnik",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 250,
       "swift_in": {
         "pct": 0,
@@ -401,7 +457,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa Business"],
+        "international": [
+          "Visa Business"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "SEPA IN: 0%. SEPA OUT: 0.20%, мин 800, макс 32.000 RSD. Внутренний перевод: 40 RSD. Уплата готовины: 0.25%."
@@ -413,7 +471,10 @@
       "package_tier": "standard",
       "target": "malo_privredno_drustvo",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 500,
       "swift_in": {
         "pct": 0,
@@ -435,7 +496,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa Business"],
+        "international": [
+          "Visa Business"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "SEPA IN: 0%. SEPA OUT: 0.20%, мин 800, макс 32.000 RSD. Внутренний перевод: 40 RSD."
@@ -447,7 +510,10 @@
       "package_tier": "premium",
       "target": "sve",
       "is_multicurrency": true,
-      "supported_currencies": ["RSD", "EUR"],
+      "supported_currencies": [
+        "RSD",
+        "EUR"
+      ],
       "maintenance_fee_rsd": 1500,
       "swift_in": {
         "pct": 0,
@@ -469,7 +535,9 @@
         "ips_qr": true
       },
       "cards": {
-        "international": ["Visa Business"],
+        "international": [
+          "Visa Business"
+        ],
         "dina_notes": "Bez naknade"
       },
       "notes": "Лучший Swift OUT среди бизнес-пакетов Raiffeisen: 0.15%. SEPA OUT: 0.12%, мин 800, макс 32.000 RSD."
@@ -479,9 +547,15 @@
       "name": "Oročeni depozit bez posebne namene (RSD)",
       "category": "savings_deposit",
       "deposit_type": "orocena",
-      "currencies": ["RSD"],
+      "currencies": [
+        "RSD"
+      ],
       "terms": [
-        { "term_months": 12, "rate_pct": 1.00, "early_withdrawal_penalty_pct": 100 }
+        {
+          "term_months": 12,
+          "rate_pct": 1.0,
+          "early_withdrawal_penalty_pct": 100
+        }
       ],
       "tax_on_interest_pct": 0,
       "tax_note": "RSD — 0%, банк является налоговым агентом",
@@ -493,10 +567,20 @@
       "name": "Devizni oročeni depoziti (EUR)",
       "category": "savings_deposit",
       "deposit_type": "orocena",
-      "currencies": ["EUR"],
+      "currencies": [
+        "EUR"
+      ],
       "terms": [
-        { "term_months": 3, "rate_pct": 0.11, "early_withdrawal_penalty_pct": 100 },
-        { "term_months": 12, "rate_pct": 0.11, "early_withdrawal_penalty_pct": 100 }
+        {
+          "term_months": 3,
+          "rate_pct": 0.11,
+          "early_withdrawal_penalty_pct": 100
+        },
+        {
+          "term_months": 12,
+          "rate_pct": 0.11,
+          "early_withdrawal_penalty_pct": 100
+        }
       ],
       "tax_on_interest_pct": 15,
       "tax_note": "EUR/USD — 15% налог, банк является налоговым агентом",
@@ -511,7 +595,10 @@
       "available_via_bank": true,
       "min_residency_status": "resident_less_1y",
       "instrument_type": "RS_GOV",
-      "currencies_available": ["EUR", "RSD"],
+      "currencies_available": [
+        "EUR",
+        "RSD"
+      ],
       "yield_eur_approx_pct": 4.0,
       "yield_rsd_approx_pct": 6.5,
       "tax_on_coupon_pct": 0,
@@ -530,9 +617,9 @@
       "currency": "EUR",
       "rate_type": "combined",
       "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.40,
+      "rate_margin_pct": 2.4,
       "rate_fixed_period_years": 5,
-      "rate_approx_total_pct": 4.20,
+      "rate_approx_total_pct": 4.2,
       "loan_term_years": [],
       "max_ltv_pct": 80,
       "min_down_payment_pct": 20,
@@ -549,7 +636,7 @@
       "currency": "EUR",
       "rate_type": "variable",
       "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.30,
+      "rate_margin_pct": 2.3,
       "rate_approx_total_pct": 4.31,
       "loan_term_years": [],
       "max_ltv_pct": 80,
@@ -567,9 +654,9 @@
       "currency": "EUR",
       "rate_type": "combined",
       "rate_base": "EURIBOR 3M",
-      "rate_margin_pct": 2.00,
+      "rate_margin_pct": 2.0,
       "rate_fixed_period_years": 6,
-      "rate_approx_total_pct": 1.50,
+      "rate_approx_total_pct": 1.5,
       "loan_term_years": [],
       "max_ltv_pct": 99,
       "min_down_payment_pct": 1,
@@ -585,7 +672,7 @@
       "category": "credit_consumer",
       "purpose": "general",
       "currency": "RSD",
-      "rate_approx_pct": 7.90,
+      "rate_approx_pct": 7.9,
       "rate_type": "fixed",
       "loan_term_months": [],
       "min_amount_rsd": 80000,
@@ -613,15 +700,23 @@
       "product_id": "rf_transfer_swift",
       "name": "Международный перевод SWIFT",
       "category": "transfer",
-      "available_directions": ["incoming", "outgoing"],
+      "available_directions": [
+        "incoming",
+        "outgoing"
+      ],
       "outgoing_resident_restriction": "Нерезиденты и ВНЖ < 1 года — только в отделении, нужен инвойс/контракт",
       "outgoing_resident_1y_plus": "Без документальных ограничений через приложение",
-      "fee_incoming_pct": 0.40,
+      "fee_incoming_pct": 0.4,
       "fee_incoming_min_rsd": 300,
-      "fee_outgoing_pct": 0.80,
+      "fee_outgoing_pct": 0.8,
       "fee_outgoing_min_rsd": 1000,
       "fee_outgoing_max_rsd": 40000,
-      "supported_currencies": ["EUR", "USD", "CHF", "GBP"],
+      "supported_currencies": [
+        "EUR",
+        "USD",
+        "CHF",
+        "GBP"
+      ],
       "notes": "E-banking исходящий: 0.20%, мин 750, макс 10.000 RSD. USD конвертируется через RBI Vienna."
     }
   ]

@@ -3,19 +3,19 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useResidency } from "@/components/ResidencyProvider";
 import { BankMatrix } from "@/components/Accounts/BankMatrix";
 import { InvestTab } from "@/components/Invest/InvestTab";
 import { SavingsTab } from "@/components/Savings/SavingsTab";
 import { TaxOptimizer } from "@/components/Taxes/TaxOptimizer";
 import { VerifiedExperts } from "@/components/Services/VerifiedExperts";
+import { CalculatorsTab } from "@/components/Calculators/CalculatorsTab";
 import type { TransformedMatrixItem, ResidencyStatus, BankProduct } from "@/types/bank";
 import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
 import type { BrokerJSON } from "@/types/broker";
 
 // Выводим тип категории прямо из BankProduct — не создаём новый тип
 // 'taxes' и 'services' — рендерятся inline как обычные вкладки
-type TabId = BankProduct['category'] | 'accounts' | 'taxes' | 'services';
+type TabId = BankProduct['category'] | 'accounts' | 'taxes' | 'services' | 'calculators';
 
 // ─────────────────────────────────────────
 // Конфиг табов
@@ -28,6 +28,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'transfer',         label: 'Переводы'          },
   { id: 'business_account', label: 'РКО для бизнеса'  },
   { id: 'taxes',            label: 'Налоги'            },
+  { id: 'calculators',     label: 'Калькуляторы'      },
   { id: 'services',         label: 'Услуги'            },
 ];
 
@@ -56,16 +57,16 @@ const STATUS_INFO: Record<ResidencyStatus, { badge: string; text: string }> = {
 
 interface MainTabsClientProps {
   allItems: TransformedMatrixItem[];
+  businessItems: TransformedMatrixItem[];
   currentStatus: ResidencyStatus;
   taxRules: TaxRuleWithCategory[];
   serviceProviders: ServiceProvider[];
   brokers: BrokerJSON[];
 }
 
-export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProviders, brokers }: MainTabsClientProps) {
+export function MainTabsClient({ allItems, businessItems, currentStatus, taxRules, serviceProviders, brokers }: MainTabsClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { legalType } = useResidency();
 
   // Таб живёт в URL: /?tab=credit_mortgage — router.back() восстановит его
   const activeTab = (searchParams.get('tab') as TabId) || 'accounts';
@@ -79,13 +80,18 @@ export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProvi
   const visibleItems = allItems.filter(item => {
     const cat = item.products.category;
     if (activeTab === 'accounts') {
-      return cat === 'personal_account' || cat === 'business_account';
+      return cat === 'personal_account';
     }
     if (activeTab === 'credit_mortgage') {
       return cat === 'credit_mortgage' || cat === 'credit_consumer';
     }
     return cat === activeTab;
   });
+
+  // РКО всегда из businessItems (legalType='business'), независимо от глобального cookie
+  const visibleBusinessItems = businessItems.filter(
+    item => item.products.category === 'business_account'
+  );
 
   return (
     <div>
@@ -117,6 +123,8 @@ export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProvi
       {/* Контент таба */}
       {activeTab === 'taxes' ? (
         <TaxOptimizer initialRules={taxRules} />
+      ) : activeTab === 'calculators' ? (
+        <CalculatorsTab />
       ) : activeTab === 'services' ? (
         <VerifiedExperts providers={serviceProviders} />
       ) : activeTab === 'investment_bonds' ? (
@@ -126,13 +134,21 @@ export function MainTabsClient({ allItems, currentStatus, taxRules, serviceProvi
           brokers={brokers}
           currentStatus={currentStatus}
         />
-        ) : activeTab === 'savings_deposit' ? (
+      ) : activeTab === 'savings_deposit' ? (
         <SavingsTab items={allItems} />
+      ) : activeTab === 'business_account' ? (
+        visibleBusinessItems.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200">
+            <p className="text-slate-400 text-sm">Нет данных для выбранного статуса</p>
+          </div>
+        ) : (
+          <BankMatrix initialItems={visibleBusinessItems} />
+        )
       ) : visibleItems.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200">
           <p className="text-slate-400 text-sm">Нет данных для выбранного статуса</p>
         </div>
-      ) : activeTab === 'accounts' || activeTab === 'business_account' ? (
+      ) : activeTab === 'accounts' ? (
         <BankMatrix initialItems={visibleItems} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

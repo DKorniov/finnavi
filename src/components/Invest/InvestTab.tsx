@@ -8,14 +8,13 @@ import type { BrokerJSON } from "@/types/broker";
 // ─────────────────────────────────────────
 // Подвкладки раздела Инвестиции
 // ─────────────────────────────────────────
-type InvestSubTab = 'moneybox' | 'bonds' | 'brokers' | 'etf' | 'exchangers';
+type InvestSubTab = 'moneybox' | 'bonds' | 'brokers' | 'etf';
 
 const INVEST_TABS: { id: InvestSubTab; label: string }[] = [
   { id: 'moneybox',   label: '💰 Финподушка'        },
   { id: 'bonds',      label: '📄 Гособлигации'      },
   { id: 'brokers',    label: '📈 Брокеры'           },
   { id: 'etf',        label: '🗂 ETF-фонды'         },
-  { id: 'exchangers', label: '💱 Обменники'         },
 ];
 
 interface InvestTabProps {
@@ -60,7 +59,6 @@ export function InvestTab({ bondItems, savingsItems, brokers = [], currentStatus
       {activeSubTab === 'bonds'      && <BondsContent items={bondItems} />}
       {activeSubTab === 'brokers'    && <BrokersContent brokers={brokers} currentStatus={currentStatus} />}
       {activeSubTab === 'etf' && <EtfContent />}
-      {activeSubTab === 'exchangers' && <ExchangersContent />}
     </div>
   );
 }
@@ -203,62 +201,6 @@ function EtfContent() {
   );
 }
 
-// ─────────────────────────────────────────
-// Обменники — заглушка
-// ─────────────────────────────────────────
-function ExchangersContent() {
-  return (
-    <div>
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm text-slate-600">
-        <span className="font-bold text-slate-800 block mb-1">Курсы валют в лицензированных обменниках</span>
-        Данные обновляются ежедневно. Все обменники лицензированы НБС (Народным банком Сербии).
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <ExchangerStubCard />
-      </div>
-    </div>
-  );
-}
-
-function ExchangerStubCard() {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="font-bold text-slate-900">Alta Pay Menjačnica</h3>
-          <p className="text-[11px] text-slate-400 mt-0.5">Beograd · Лицензия НБС</p>
-        </div>
-        <span className="text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded">
-          Заглушка
-        </span>
-      </div>
-      <div className="space-y-2 text-sm">
-        {[
-          { cur: 'USD', buy: 107.50, sell: 109.20 },
-          { cur: 'EUR', buy: 116.80, sell: 118.50 },
-          { cur: 'CHF', buy: 119.00, sell: 121.00 },
-        ].map(r => (
-          <div key={r.cur} className="flex justify-between items-center">
-            <span className="font-bold text-slate-700">{r.cur}</span>
-            <div className="flex gap-4 text-xs">
-              <span className="text-slate-500">Покупка: <span className="font-bold text-slate-800">{r.buy}</span></span>
-              <span className="text-slate-500">Продажа: <span className="font-bold text-slate-800">{r.sell}</span></span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="text-[10px] text-slate-400 mt-3">Пн–Пт 09:00–18:00, Сб 09:00–14:00</p>
-      <a
-        href="https://altapay.rs/alta-menjacnica/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block mt-4 text-center text-xs font-bold bg-slate-900 text-white py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
-      >
-        Сайт обменника →
-      </a>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────
 // Карточка вклада (финподушка)
