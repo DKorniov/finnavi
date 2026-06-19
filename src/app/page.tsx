@@ -3,8 +3,9 @@ import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import { getMatrixItemsForStatus } from "@/lib/data/banks";
 import { getAllBrokers } from "@/lib/data/brokers";
+import { getFundItemsForStatus } from "@/lib/data/funds";
 import { MainTabsClient } from "@/components/MainTabsClient";
-import { LandingPage } from "@/components/Landing/LandingPage"; // ← новый импорт
+import { LandingPage } from "@/components/Landing/LandingPage";
 import type { ResidencyStatus, LegalType } from "@/types/bank";
 import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
 
@@ -29,10 +30,11 @@ export default async function HomePage({
 
   // businessItems запрашиваем всегда с legalType='business' —
   // вкладка РКО не зависит от глобального cookie пользователя
-  const [allItems, businessItems, brokers] = await Promise.all([
+  const [allItems, businessItems, brokers, fundItems] = await Promise.all([
     getMatrixItemsForStatus(status, legalType),
     getMatrixItemsForStatus(status, 'business'),
     getAllBrokers(),
+    getFundItemsForStatus(status),
   ]);
 
   let taxRules: TaxRuleWithCategory[] = [];
@@ -70,6 +72,7 @@ export default async function HomePage({
         taxRules={taxRules}
         serviceProviders={serviceProviders}
         brokers={brokers}
+        fundItems={fundItems}
       />
     </div>
   );

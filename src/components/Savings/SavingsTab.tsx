@@ -451,83 +451,7 @@ function minStr(item: TransformedMatrixItem): string {
   return "";
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// НБС-баннер
-// ─────────────────────────────────────────────────────────────────────────────
-function NbsBanner() {
-  return (
-    <div className="border border-slate-200 rounded-xl overflow-hidden mb-4 shadow-xs">
-      <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-200">
-        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-          Ключевые ставки НБС
-        </span>
-        <a href="https://www.nbs.rs/sr/indeks/" target="_blank" rel="noopener noreferrer"
-          className="text-[11px] text-blue-600 hover:underline">
-          nbs.rs →
-        </a>
-      </div>
-      <div className="grid grid-cols-3">
-        {[
-          { label: "Референтная ставка", value: "5.75%", sub: "с 09.09.2024", cls: "text-emerald-700" },
-          { label: "По депозитным средствам", value: "4.50%", sub: "Инфляция в мае: 3.5%", cls: "text-blue-700" },
-          { label: "По кредитным средствам", value: "7.00%", sub: "Целевая инфляция 3±1.5%", cls: "text-red-700" },
-        ].map((cell, i) => (
-          <div key={i} className={`px-4 py-3 bg-slate-50 ${i > 0 ? "border-l border-slate-200" : ""}`}>
-            <p className="text-[11px] text-slate-500 mb-1">{cell.label}</p>
-            <p className={`text-xl font-bold ${cell.cls}`}>{cell.value}</p>
-            <p className="text-[10px] text-slate-400 mt-0.5">{cell.sub}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Мини-спарклайн (SVG, без зависимостей)
-// ─────────────────────────────────────────────────────────────────────────────
-function Sparkline({ color, seed }: { color: string; seed: number }) {
-  const pts: number[] = [];
-  let v = 50;
-  for (let i = 0; i < 30; i++) {
-    v = Math.max(15, Math.min(85, v + Math.sin(seed * i * 0.7) * 5 + Math.cos(seed * i * 0.3) * 3));
-    pts.push(v);
-  }
-  const W = 200; const H = 52;
-  const xs = pts.map((_, i) => (i / (pts.length - 1)) * W);
-  const ys = pts.map(p => H - (p / 100) * H * 0.8 - H * 0.08);
-  const d = xs.map((x, i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ");
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-14" preserveAspectRatio="none">
-      <path d={`${d} L${W},${H} L0,${H} Z`} fill={color} fillOpacity="0.10" />
-      <path d={d} fill="none" stroke={color} strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function IndexCard({ title, value, color, seed, pills }: {
-  title: string; value: string; color: string; seed: number;
-  pills: Array<{ term: string; rate: string }>;
-}) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
-      <p className="text-xs font-medium text-slate-600 mb-1">{title}</p>
-      <div className="flex items-baseline gap-2 mb-0.5">
-        <span className="text-2xl font-bold" style={{ color }}>{value}</span>
-        <span className="text-[11px] text-slate-400">13.06.2026 · 5 банков</span>
-      </div>
-      <Sparkline color={color} seed={seed} />
-      <div className="flex gap-1.5 flex-wrap mt-2">
-        {pills.map(p => (
-          <span key={p.term}
-            className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-500">
-            {p.term} · {p.rate}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Панель фильтров
@@ -792,15 +716,6 @@ export function SavingsTab({ items }: SavingsTabProps) {
 
   return (
     <>
-      <NbsBanner />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-        <IndexCard title="Индекс RSD-вкладов ExpatFinance" value="6.5%" color="#3B6D11" seed={7}
-          pills={[{ term: "3 мес", rate: "6%" }, { term: "6 мес", rate: "6.5%" }, { term: "12 мес", rate: "7%" }]} />
-        <IndexCard title="Индекс EUR-вкладов ExpatFinance" value="2.8%" color="#854F0B" seed={13}
-          pills={[{ term: "3 мес", rate: "1.5%" }, { term: "6 мес", rate: "2%" }, { term: "12 мес", rate: "2.8%" }]} />
-      </div>
-
       <FilterPanel filters={filters} onChange={setFilters} bestRsd={bestRsd} bestEur={bestEur} />
 
       {filtered.length === 0 ? (

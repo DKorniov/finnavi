@@ -18,7 +18,6 @@ export function StickyHeader() {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Закрываем dropdown при клике вне него
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -40,33 +39,19 @@ export function StickyHeader() {
           Expat<span className="text-emerald-500">Finance</span>
         </Link>
 
-        {/* Desktop: pill-кнопки */}
-        <div className="hidden lg:flex bg-blue-50 border border-blue-100 p-0.5 rounded-lg text-xs font-medium">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setStatus(tab.id)}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                status === tab.id
-                  ? "bg-blue-600 text-white shadow-xs font-semibold"
-                  : "text-blue-700 hover:bg-blue-100/50"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Mobile: dropdown */}
-        <div className="relative lg:hidden" ref={dropdownRef}>
+        {/* Единый dropdown для всех экранов */}
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setOpen(prev => !prev)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
               open
                 ? "bg-blue-600 text-white border-blue-600"
-                : "bg-blue-50 text-blue-700 border-blue-200"
+                : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
             }`}
           >
+            <span className="hidden sm:inline text-[11px] font-semibold text-current opacity-60 mr-0.5">
+              Статус:
+            </span>
             {currentLabel}
             <svg
               className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -77,8 +62,8 @@ export function StickyHeader() {
           </button>
 
           {open && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-xl shadow-lg z-[100] overflow-y-auto max-h-[calc(100vh-80px)]">
-              <div className="px-3 py-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100 sticky top-0 bg-white">
+            <div className="absolute right-0 top-full mt-1 w-52 bg-white border border-slate-200 rounded-xl shadow-lg z-[100] overflow-hidden">
+              <div className="px-3 py-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100 bg-slate-50">
                 Статус резидентства
               </div>
               {TABS.map((tab) => (
@@ -87,7 +72,7 @@ export function StickyHeader() {
                   onClick={() => { setStatus(tab.id); setOpen(false); }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 text-sm transition-colors ${
                     status === tab.id
-                      ? "bg-blue-50 text-blue-700 font-medium"
+                      ? "bg-blue-50 text-blue-700 font-semibold"
                       : "text-slate-700 hover:bg-slate-50"
                   }`}
                 >

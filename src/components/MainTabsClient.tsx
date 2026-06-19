@@ -9,12 +9,13 @@ import { SavingsTab } from "@/components/Savings/SavingsTab";
 import { TaxOptimizer } from "@/components/Taxes/TaxOptimizer";
 import { VerifiedExperts } from "@/components/Services/VerifiedExperts";
 import { CalculatorsTab } from "@/components/Calculators/CalculatorsTab";
+import { StatusBanner } from "@/components/StatusBanner";
+import { CreditTab } from "@/components/Credits/CreditTab";
 import type { TransformedMatrixItem, ResidencyStatus, BankProduct } from "@/types/bank";
 import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
 import type { BrokerJSON } from "@/types/broker";
+import type { TransformedFundItem } from "@/types/fund";
 
-// Выводим тип категории прямо из BankProduct — не создаём новый тип
-// 'taxes' и 'services' — рендерятся inline как обычные вкладки
 type TabId = BankProduct['category'] | 'accounts' | 'taxes' | 'services' | 'calculators';
 
 // ─────────────────────────────────────────
@@ -28,32 +29,9 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'transfer',         label: 'Переводы'          },
   { id: 'business_account', label: 'РКО для бизнеса'  },
   { id: 'taxes',            label: 'Налоги'            },
-  { id: 'calculators',     label: 'Калькуляторы'      },
+  { id: 'calculators',      label: 'Калькуляторы'      },
   { id: 'services',         label: 'Услуги'            },
 ];
-
-const STATUS_INFO: Record<ResidencyStatus, { badge: string; text: string }> = {
-  non_resident: {
-    badge: "Критические ограничения",
-    text: "Большинство банков требуют трудовой контракт. Исходящие SWIFT-переводы заблокированы или требуют личного присутствия в кассе.",
-  },
-  resident_less_1y: {
-    badge: "Базовый доступ",
-    text: "Доступны личные и бизнес-счета в лояльных банках. Исходящие SWIFT могут потребовать инвойс.",
-  },
-  resident_more_1y: {
-    badge: "Валютный резидент",
-    text: "Сняты ограничения на исходящие SWIFT-переводы. Комплаенс становится мягче.",
-  },
-  permanent_resident: {
-    badge: "Привилегированный доступ",
-    text: "Полное доверие со стороны комплаенса. Доступны кредитные продукты и ипотека без поручителей.",
-  },
-  citizen: {
-    badge: "Полный доступ",
-    text: "Никаких инфраструктурных ограничений. Вся финансовая экосистема страны доступна в штатном режиме.",
-  },
-};
 
 interface MainTabsClientProps {
   allItems: TransformedMatrixItem[];
@@ -62,46 +40,45 @@ interface MainTabsClientProps {
   taxRules: TaxRuleWithCategory[];
   serviceProviders: ServiceProvider[];
   brokers: BrokerJSON[];
+  fundItems: TransformedFundItem[];
 }
 
-export function MainTabsClient({ allItems, businessItems, currentStatus, taxRules, serviceProviders, brokers }: MainTabsClientProps) {
+export function MainTabsClient({
+  allItems,
+  businessItems,
+  currentStatus,
+  taxRules,
+  serviceProviders,
+  brokers,
+  fundItems,
+}: MainTabsClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Таб живёт в URL: /?tab=credit_mortgage — router.back() восстановит его
   const activeTab = (searchParams.get('tab') as TabId) || 'accounts';
 
   function setActiveTab(tab: TabId) {
     router.push(`/?tab=${tab}`, { scroll: false });
   }
 
-  const statusInfo = STATUS_INFO[currentStatus];
-
   const visibleItems = allItems.filter(item => {
     const cat = item.products.category;
-    if (activeTab === 'accounts') {
-      return cat === 'personal_account';
-    }
-    if (activeTab === 'credit_mortgage') {
-      return cat === 'credit_mortgage' || cat === 'credit_consumer';
-    }
+    if (activeTab === 'accounts') return cat === 'personal_account';
     return cat === activeTab;
   });
 
-  // РКО всегда из businessItems (legalType='business'), независимо от глобального cookie
+  const creditItems = allItems.filter(item =>
+    item.products.category === 'credit_mortgage' || item.products.category === 'credit_consumer'
+  );
+
   const visibleBusinessItems = businessItems.filter(
     item => item.products.category === 'business_account'
   );
 
   return (
     <div>
-      {/* Статус-баннер */}
-      <div className="bg-white border border-slate-200 rounded-xl px-5 py-4 mb-5 flex flex-wrap items-center gap-3 shadow-xs">
-        <span className="text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-md uppercase tracking-wider whitespace-nowrap">
-          {statusInfo.badge}
-        </span>
-        <p className="text-sm text-slate-600 leading-relaxed">{statusInfo.text}</p>
-      </div>
+      {/* StatusBanner — заменяет старую плашку */}
+      <StatusBanner status={currentStatus} />
 
       {/* Таб-навигация */}
       <div className="flex gap-0 border-b border-slate-200 mb-6 overflow-x-auto">
@@ -130,10 +107,12 @@ export function MainTabsClient({ allItems, businessItems, currentStatus, taxRule
       ) : activeTab === 'investment_bonds' ? (
         <InvestTab
           bondItems={allItems.filter(i => i.products.category === 'investment_bonds')}
-          savingsItems={allItems.filter(i => i.products.category === 'savings_deposit')}
           brokers={brokers}
+          fundItems={fundItems}
           currentStatus={currentStatus}
         />
+      ) : activeTab === 'credit_mortgage' ? (
+        <CreditTab items={allItems} />
       ) : activeTab === 'savings_deposit' ? (
         <SavingsTab items={allItems} />
       ) : activeTab === 'business_account' ? (
@@ -174,7 +153,6 @@ function ProductCard({ item }: { item: TransformedMatrixItem }) {
         ? 'border-red-100 opacity-75'
         : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
     }`}>
-      {/* Шапка */}
       <div className="px-5 pt-5 pb-3 border-b border-slate-100">
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -197,12 +175,10 @@ function ProductCard({ item }: { item: TransformedMatrixItem }) {
         </div>
       </div>
 
-      {/* Поля — строго типизированы через narrowing */}
       <div className="px-5 py-4 flex-1 space-y-2 text-sm">
         <ProductFields product={product} />
       </div>
 
-      {/* Футер */}
       <div className="px-5 pb-5">
         <Link
           href={`/accounts/product/${product.product_id}`}
@@ -220,8 +196,7 @@ function ProductCard({ item }: { item: TransformedMatrixItem }) {
 }
 
 // ─────────────────────────────────────────
-// Поля карточки — строгий narrowing по category
-// без использования any
+// Поля карточки — narrowing по category
 // ─────────────────────────────────────────
 type ProductWithBank = TransformedMatrixItem['products'];
 
