@@ -4,8 +4,10 @@ import path from 'path';
 import type { BrokerJSON } from '@/types/broker';
 
 const brokersDirectory = path.join(process.cwd(), 'data/brokers');
+let brokersCache: BrokerJSON[] | null = null;
 
 export async function getAllBrokers(): Promise<BrokerJSON[]> {
+  if (brokersCache) return brokersCache;
   if (!fs.existsSync(brokersDirectory)) return [];
 
   const fileNames = fs.readdirSync(brokersDirectory);
@@ -25,5 +27,6 @@ export async function getAllBrokers(): Promise<BrokerJSON[]> {
     })
     .filter((broker): broker is BrokerJSON => broker !== null);
 
+  brokersCache = brokers;
   return brokers;
 }

@@ -52,6 +52,11 @@ function getApproxRate(item: TransformedMatrixItem): number {
   return p.rate_approx_total_pct ?? p.rate_approx_pct ?? 5;
 }
 
+// Приблизительный курс для перевода фильтра суммы (задаётся в EUR) в RSD-эквивалент
+// при расчёте платежа по динарским продуктам. Курс ориентировочный, не биржевой —
+// используется только для слайдера суммы, не для реальных расчётов клиента.
+const EUR_TO_RSD_RATE = 117;
+
 function calcMonthlyPayment(amount: number, annualRatePct: number, termMonths: number): number {
   if (termMonths <= 0 || amount <= 0) return 0;
   const r = annualRatePct / 100 / 12;
@@ -114,8 +119,8 @@ function amountLabel(item: TransformedMatrixItem): string {
 
 function matchesAmount(item: TransformedMatrixItem, amountEur: number): boolean {
   const p = item.products;
-  const minEur = p.min_amount_eur ?? (p.min_amount_rsd ? p.min_amount_rsd / 117 : 0);
-  const maxEur = p.max_amount_eur ?? (p.max_amount_rsd ? p.max_amount_rsd / 117 : Infinity);
+  const minEur = p.min_amount_eur ?? (p.min_amount_rsd ? p.min_amount_rsd / EUR_TO_RSD_RATE : 0);
+  const maxEur = p.max_amount_eur ?? (p.max_amount_rsd ? p.max_amount_rsd / EUR_TO_RSD_RATE : Infinity);
   return amountEur >= minEur && amountEur <= maxEur;
 }
 
@@ -138,6 +143,26 @@ function termStr(months: number): string {
   const y = Math.floor(months / 12);
   const m = months % 12;
   return m === 0 ? `${y} лет` : `${y} лет ${m} мес`;
+}
+
+// Фильтр суммы всегда задаётся в EUR (единая шкала для слайдера), но платёж
+// нужно считать и показывать в РЕАЛЬНОЙ валюте продукта — иначе для RSD-кредита
+// показывается ставка/сумма в RSD, а платёж в евро, что финансово некорректно.
+function getProductCurrency(item: TransformedMatrixItem): "RSD" | "EUR" {
+  return item.products.currency === "RSD" ? "RSD" : "EUR";
+}
+
+function calcPaymentInProductCurrency(item: TransformedMatrixItem, calcFilter: CalcFilter): { payment: number; principal: number; currency: "RSD" | "EUR" } {
+  const currency = getProductCurrency(item);
+  const principal = currency === "RSD" ? calcFilter.amount_eur * EUR_TO_RSD_RATE : calcFilter.amount_eur;
+  const rate = getApproxRate(item);
+  const payment = calcMonthlyPayment(principal, rate, calcFilter.term_months);
+  return { payment, principal, currency };
+}
+
+function formatMoney(amount: number, currency: "RSD" | "EUR"): string {
+  const rounded = Math.round(amount).toLocaleString("ru-RU");
+  return currency === "RSD" ? `${rounded} RSD` : `€${rounded}`;
 }
 
 // ─── Tag ────────────────────────────────────────────────────────────────────
@@ -176,77 +201,82 @@ function ProductRow({ item, calcFilter, onInfoClick }: {
   const logoInit  = BANKS_INITIALS[bankName] ?? bankName.charAt(0);
   const isBlocked = !item.is_available || item.probability === "blocked";
 
-  const rate    = getApproxRate(item);
-  const payment = calcMonthlyPayment(calcFilter.amount_eur, rate, calcFilter.term_months);
-  const overpay = payment * calcFilter.term_months - calcFilter.amount_eur;
+  const { payment, currency } = calcPaymentInProductCurrency(item, calcFilter);
 
   return (
-    <div className={`flex items-stretch bg-white border rounded-xl overflow-hidden transition-all
-      ${isBlocked ? "border-red-100 opacity-60" : "border-slate-200 hover:border-slate-300 hover:shadow-xs"}`}>
-
-      {/* Логотип */}
-      <div className="w-12 flex-shrink-0 flex items-center justify-center text-xs font-bold"
-        style={{ backgroundColor: logoColor, color: logoText }}>
-        {logoInit}
-      </div>
-
-      {/* Основной блок */}
-      <div className="flex-1 px-4 py-3 border-l border-slate-100 min-w-0">
-        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">{bankName}</p>
-        <p className="text-sm font-semibold text-slate-900 mb-2.5 leading-snug">{p.name}</p>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2.5">
-          <span className="text-xs text-slate-500">Ставка: <span className="font-semibold text-emerald-700">{rateLabel(item)}</span></span>
-          <span className="text-xs text-slate-500">Срок: <span className="font-semibold text-slate-800">{termLabel(item)}</span></span>
-          <span className="text-xs text-slate-500">Сумма: <span className="font-semibold text-slate-800">{amountLabel(item)}</span></span>
+    <article
+      className={`bg-white border rounded-2xl px-5 py-4 transition-colors ${
+        isBlocked ? "border-slate-100 opacity-60" : "border-slate-200 hover:border-slate-300"
+      }`}
+    >
+      <div className="flex items-center gap-3 flex-wrap">
+        {/* Лого */}
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-semibold shrink-0"
+          style={{ backgroundColor: logoColor, color: logoText }}
+        >
+          {logoInit}
         </div>
-        <div className="flex gap-1 flex-wrap">
-          {p.rate_type === "fixed" && <Tag label="Фиксированная" cls="bg-emerald-50 text-emerald-700 border-emerald-200" />}
-          {p.rate_type === "variable" && <Tag label="Плавающая" cls="bg-amber-50 text-amber-700 border-amber-200" />}
-          {p.rate_type === "combined" && <Tag label="Комбо ставка" cls="bg-blue-50 text-blue-700 border-blue-200" />}
-          {p.category === "credit_mortgage" && p.min_down_payment_pct != null && (
-            <Tag label={`Взнос от ${p.min_down_payment_pct}%`} cls="bg-slate-100 text-slate-500 border-slate-200" />
-          )}
-          {p.category === "credit_mortgage" && p.max_ltv_pct != null && (
-            <Tag label={`LTV до ${p.max_ltv_pct}%`} cls="bg-slate-100 text-slate-500 border-slate-200" />
-          )}
-          {p.processing_fee_pct === 0 && <Tag label="Без комиссии" cls="bg-emerald-50 text-emerald-700 border-emerald-200" />}
-          {p.early_repayment_fee_pct === 0 && <Tag label="Досрочное бесплатно" cls="bg-emerald-50 text-emerald-700 border-emerald-200" />}
+
+        {/* Название + банк */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-slate-900 leading-snug truncate">{p.name}</p>
+          <p className="text-xs text-slate-400 mt-0.5">{bankName}</p>
         </div>
-      </div>
 
-      {/* Расчётный платёж */}
-      <div className="w-36 flex-shrink-0 flex flex-col items-center justify-center px-3 border-l border-slate-100 text-center gap-0.5">
-        <span className="text-[10px] text-slate-400">платёж/мес</span>
-        <span className="text-lg font-bold text-slate-900 leading-tight">
-          €{Math.round(payment).toLocaleString("ru-RU")}
-        </span>
-        <span className="text-[10px] text-slate-400">
-          перепл. €{Math.round(overpay).toLocaleString("ru-RU")}
-        </span>
-      </div>
+        {/* Ставка */}
+        <div className="text-right shrink-0">
+          <p className="text-[11px] text-slate-400">Ставка</p>
+          <p className="text-sm font-semibold text-slate-900">{rateLabel(item)}</p>
+        </div>
 
-      {/* Кнопки */}
-      <div className="flex flex-col gap-1.5 items-center justify-center px-3 py-3 border-l border-slate-100 flex-shrink-0 min-w-[116px]">
+        {/* Платёж/мес — расчётная величина, главная метрика для сравнения */}
+        <div className="text-right shrink-0">
+          <p className="text-[11px] text-slate-400">платёж/мес</p>
+          <p className="text-sm font-semibold text-slate-900">{formatMoney(payment, currency)}</p>
+        </div>
+
+        {/* Вероятность */}
+        <KycBadge probability={item.probability} isAvailable={item.is_available} />
+
+        {/* Кнопка ⓘ */}
+        <button
+          onClick={() => onInfoClick(item)}
+          aria-label={`Детали: ${p.name}`}
+          className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors shrink-0"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+
+        {/* Кнопка Подробнее */}
         <Link
           href={`/accounts/product/${p.product_id}`}
-          className="w-full text-center text-xs font-semibold py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white transition-colors"
+          className="shrink-0 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
         >
           Подробнее
         </Link>
-        <div className="flex items-center justify-between w-full gap-1">
-          <KycBadge probability={item.probability} isAvailable={item.is_available} />
-          <button
-            onClick={() => onInfoClick(item)}
-            aria-label={`Детали: ${p.name}`}
-            className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors shrink-0"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </button>
-        </div>
       </div>
-    </div>
+
+      {/* Теги — отдельной строкой снизу, с переносом */}
+      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-100">
+        <Tag label={currency} cls={currency === "RSD" ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-slate-100 text-slate-600 border-slate-200"} />
+        <Tag label={`Срок ${termLabel(item)}`} cls="bg-slate-100 text-slate-600 border-slate-200" />
+        <Tag label={`Сумма ${amountLabel(item)}`} cls="bg-slate-100 text-slate-600 border-slate-200" />
+        {p.rate_type === "fixed" && <Tag label="Фиксированная" cls="bg-emerald-50 text-emerald-700 border-emerald-200" />}
+        {p.rate_type === "variable" && <Tag label="Плавающая" cls="bg-amber-50 text-amber-700 border-amber-200" />}
+        {p.rate_type === "combined" && <Tag label="Комбо ставка" cls="bg-blue-50 text-blue-700 border-blue-200" />}
+        {p.category === "credit_mortgage" && p.min_down_payment_pct != null && (
+          <Tag label={`Взнос от ${p.min_down_payment_pct}%`} cls="bg-slate-100 text-slate-500 border-slate-200" />
+        )}
+        {p.category === "credit_mortgage" && p.max_ltv_pct != null && (
+          <Tag label={`LTV до ${p.max_ltv_pct}%`} cls="bg-slate-100 text-slate-500 border-slate-200" />
+        )}
+        {p.processing_fee_pct === 0 && <Tag label="Без комиссии" cls="bg-emerald-50 text-emerald-700 border-emerald-200" />}
+        {p.early_repayment_fee_pct === 0 && <Tag label="Досрочное бесплатно" cls="bg-emerald-50 text-emerald-700 border-emerald-200" />}
+      </div>
+    </article>
   );
 }
 
@@ -330,11 +360,57 @@ function CalcFilterPanel({ subTab, filter, onChange }: {
   );
 }
 
+// ─── Секция по валюте — внутри всегда группировка по банку ──────────────────
+
+function CreditSection({ title, items, calcFilter, onInfoClick }: {
+  title: string;
+  items: TransformedMatrixItem[];
+  calcFilter: CalcFilter;
+  onInfoClick: (item: TransformedMatrixItem) => void;
+}) {
+  const groupedByBank = useMemo(() => {
+    return items.reduce((acc, item) => {
+      const bankName = item.products.banks.name;
+      if (!acc[bankName]) acc[bankName] = [];
+      acc[bankName].push(item);
+      return acc;
+    }, {} as Record<string, TransformedMatrixItem[]>);
+  }, [items]);
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="mt-5 first:mt-0">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{title}</span>
+        <span className="text-[11px] bg-slate-100 border border-slate-200 rounded-full px-2 py-0.5 text-slate-500">
+          {items.length}
+        </span>
+      </div>
+      <div className="flex flex-col gap-4">
+        {Object.entries(groupedByBank).map(([bankName, bankItems]) => (
+          <div key={bankName}>
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-2 pl-1">
+              {bankName}
+            </p>
+            <div className="flex flex-col gap-2">
+              {bankItems.map(item => (
+                <ProductRow key={item.id} item={item} calcFilter={calcFilter} onInfoClick={onInfoClick} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Главный компонент ────────────────────────────────────────────────────────
 
 export function CreditTab({ items }: CreditTabProps) {
   const [activeSubTab, setActiveSubTab] = useState<CreditSubTab>("mortgage");
   const [drawerItem, setDrawerItem] = useState<TransformedMatrixItem | null>(null);
+  const [currencyFilter, setCurrencyFilter] = useState<"all" | "RSD" | "EUR">("all");
   const [filters, setFilters] = useState<Record<CreditSubTab, CalcFilter>>({
     mortgage: { amount_eur: 80000, term_months: 240 },
     auto:     { amount_eur: 15000, term_months: 60  },
@@ -350,16 +426,35 @@ export function CreditTab({ items }: CreditTabProps) {
     [items]
   );
 
+  const itemsInSubTab = useMemo(
+    () => creditItems.filter(i => getSubTab(i) === activeSubTab),
+    [creditItems, activeSubTab]
+  );
+
+  // Валюты считаем по ВСЕЙ категории кредитов, а не только текущей подвкладке —
+  // иначе на Ипотеке (всегда EUR) и Потребительском (всегда RSD) фильтр пропадал бы,
+  // хотя это общий фильтр, который должен быть на месте всегда (как в Сбережениях).
+  const currencyOptions = useMemo(() => {
+    const set = new Set<"RSD" | "EUR">();
+    creditItems.forEach(i => set.add(getProductCurrency(i)));
+    return Array.from(set);
+  }, [creditItems]);
+
   const filtered = useMemo(() => {
-    return creditItems.filter(item => {
-      if (getSubTab(item) !== activeSubTab) return false;
+    return itemsInSubTab.filter(item => {
+      if (currencyFilter !== "all" && getProductCurrency(item) !== currencyFilter) return false;
       if (!matchesAmount(item, currentFilter.amount_eur)) return false;
       if (!matchesTerm(item, currentFilter.term_months)) return false;
       return true;
     });
-  }, [creditItems, activeSubTab, currentFilter]);
+  }, [itemsInSubTab, currencyFilter, currentFilter]);
 
-  const totalInTab = creditItems.filter(i => getSubTab(i) === activeSubTab).length;
+  // Валютные секции — дефолтная структура (как в Сбережениях), не опция.
+  // Внутри каждой секции — обязательная группировка по банку (как в Инвестфондах).
+  const rsdItems = useMemo(() => filtered.filter(i => getProductCurrency(i) === "RSD"), [filtered]);
+  const eurItems = useMemo(() => filtered.filter(i => getProductCurrency(i) === "EUR"), [filtered]);
+
+  const totalInTab = itemsInSubTab.length;
 
   return (
     <div>
@@ -375,6 +470,21 @@ export function CreditTab({ items }: CreditTabProps) {
             {tab.label}
           </button>
         ))}
+      </div>
+
+      {/* Фильтр валюты — общий, всегда на месте, до выбора суммы/срока.
+          Группировка по банку — дефолтная структура, не опция. */}
+      <div className="mb-4">
+        <select
+          value={currencyFilter}
+          onChange={e => setCurrencyFilter(e.target.value as "all" | "RSD" | "EUR")}
+          className="text-xs px-3 py-2 rounded-lg border border-slate-200 bg-white text-slate-800"
+        >
+          <option value="all">Все валюты</option>
+          {currencyOptions.map(c => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
 
       {/* Фильтр-калькулятор */}
@@ -399,7 +509,7 @@ export function CreditTab({ items }: CreditTabProps) {
         Найдено: <span className="font-semibold text-slate-700">{filtered.length}</span> из {totalInTab}
         {filtered.length < totalInTab && (
           <span className="ml-1 text-amber-600">
-            — фильтр по сумме/сроку сужает выборку
+            — фильтр по сумме/сроку{currencyFilter !== "all" ? "/валюте" : ""} сужает выборку
           </span>
         )}
       </p>
@@ -409,11 +519,10 @@ export function CreditTab({ items }: CreditTabProps) {
           Нет продуктов по выбранным параметрам
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
-          {filtered.map(item => (
-            <ProductRow key={item.id} item={item} calcFilter={currentFilter} onInfoClick={setDrawerItem} />
-          ))}
-        </div>
+        <>
+          <CreditSection title="RSD-кредиты" items={rsdItems} calcFilter={currentFilter} onInfoClick={setDrawerItem} />
+          <CreditSection title="EUR-кредиты" items={eurItems} calcFilter={currentFilter} onInfoClick={setDrawerItem} />
+        </>
       )}
 
       <CreditDrawer item={drawerItem} onClose={() => setDrawerItem(null)} />

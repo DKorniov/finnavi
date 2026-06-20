@@ -1,6 +1,47 @@
 // src/components/Landing/LandingPage.tsx
 import Link from "next/link";
 
+interface LandingBank {
+  bankId: string;
+  name: string;
+  logoColor: string | null;
+  website: string;
+}
+
+interface LandingPageProps {
+  banks: LandingBank[];
+}
+
+// Файлы логотипов лежат в public/logos/. Маппинг по brand_name, а не по bankId —
+// это поле точно стабильно и совпадает с тем, что приходит из JSON банков.
+// Банк без записи в маппинге просто не сломается — увидим инициалы (см. BankLogo ниже).
+const LOGO_FILE: Record<string, string> = {
+  "Raiffeisen Bank":      "/logos/raiffeisen.png",
+  "Alta Banka":           "/logos/alta.png",
+  "Banca Intesa":         "/logos/intesa.png",
+  "Poštanska Štedionica": "/logos/postanska.png",
+  "OTP Banka":            "/logos/otp.png",
+};
+
+function BankLogo({ bank }: { bank: LandingBank }) {
+  const logoSrc = LOGO_FILE[bank.name];
+  if (logoSrc) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={logoSrc} alt={bank.name} className="h-10 w-auto object-contain" />
+    );
+  }
+  // Фолбэк для банка без загруженного файла лого — не блокирует добавление новых банков
+  return (
+    <div
+      className="h-10 w-10 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+      style={{ backgroundColor: bank.logoColor ?? "#1e293b" }}
+    >
+      {bank.name.slice(0, 2).toUpperCase()}
+    </div>
+  );
+}
+
 const PAIN_CARDS = [
   {
     icon: "🏦",
@@ -73,7 +114,7 @@ const MINI_BANKS = [
   { name: "Banca Intesa",    sub: "Личный счёт · нерезидент-ограничения", badge: "Отказ",        color: "bg-red-50 text-red-800"       },
 ] as const;
 
-export function LandingPage() {
+export function LandingPage({ banks }: LandingPageProps) {
   return (
     <div className="font-sans antialiased">
 
@@ -165,21 +206,22 @@ export function LandingPage() {
             ))}
           </div>
 
-          {/* Строки банков */}
+          {/* Строки банков — кликабельны, ведут в реальную матрицу счетов */}
           <div className="space-y-2">
             {MINI_BANKS.map((b) => (
-              <div
+              <Link
                 key={b.name}
-                className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 flex items-center justify-between"
+                href="/?tab=accounts"
+                className="bg-white border border-slate-200 rounded-xl px-3 py-2.5 flex items-center justify-between hover:border-slate-300 hover:shadow-xs transition-all cursor-pointer"
               >
                 <div>
                   <div className="text-[11px] font-semibold text-slate-900">{b.name}</div>
                   <div className="text-[10px] text-slate-400 mt-0.5">{b.sub}</div>
                 </div>
-                <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${b.color}`}>
+                <span className={`text-[9px] font-bold px-2 py-0.5 rounded shrink-0 ml-2 ${b.color}`}>
                   {b.badge}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -200,6 +242,27 @@ export function LandingPage() {
           ))}
         </div>
       </div>
+
+      {/* ── Банки, которые мы отслеживаем ──────────────────── */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
+        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-5 text-center">
+          Банки в матрице
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {banks.map((bank) => (
+            <a
+              key={bank.bankId}
+              href={bank.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-4 py-3 hover:border-slate-300 hover:shadow-xs transition-all"
+            >
+              <BankLogo bank={bank} />
+              <span className="text-xs font-semibold text-slate-700">{bank.name}</span>
+            </a>
+          ))}
+        </div>
+      </section>
 
       {/* ── Три боли ───────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
@@ -294,16 +357,8 @@ export function LandingPage() {
         </div>
       </div>
 
-      {/* ── Футер ──────────────────────────────────────────── */}
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-xs text-slate-400">© 2026 ExpatFinance Navigator</span>
-          <p className="text-xs text-slate-400 text-right max-w-md leading-relaxed">
-            Данные носят информационный характер. Актуальны на июнь 2026.
-            Верифицируйте у специалиста перед финансовыми решениями.
-          </p>
-        </div>
-      </footer>
+      {/* Футер — общий компонент Footer рендерится в layout.tsx для всех страниц,
+          включая лендинг. Свой инлайновый футер тут больше не нужен. */}
 
     </div>
   );

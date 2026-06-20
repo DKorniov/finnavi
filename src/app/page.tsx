@@ -1,13 +1,13 @@
 // src/app/page.tsx
 import { cookies } from "next/headers";
-import { createClient } from "@supabase/supabase-js";
-import { getMatrixItemsForStatus } from "@/lib/data/banks";
+import { getMatrixItemsForStatus, getAllBanks } from "@/lib/data/banks";
 import { getAllBrokers } from "@/lib/data/brokers";
 import { getFundItemsForStatus } from "@/lib/data/funds";
+import { getTaxRules } from "@/lib/data/taxes";
 import { MainTabsClient } from "@/components/MainTabsClient";
 import { LandingPage } from "@/components/Landing/LandingPage";
 import type { ResidencyStatus, LegalType } from "@/types/bank";
-import type { TaxRuleWithCategory, ServiceProvider } from "@/types/database";
+import type { ServiceProvider } from "@/types/database";
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +20,14 @@ export default async function HomePage({
 
   // ── Вариант Б: лендинг когда нет ?tab в URL ────────────
   if (!resolvedParams.tab) {
-    return <LandingPage />;
+    const banks = await getAllBanks();
+    const landingBanks = banks.map(b => ({
+      bankId: b.bank_id,
+      name: b.brand_name,
+      logoColor: b.logo_color ?? null,
+      website: b.website,
+    }));
+    return <LandingPage banks={landingBanks} />;
   }
   // ───────────────────────────────────────────────────────
 
@@ -30,38 +37,18 @@ export default async function HomePage({
 
   // businessItems запрашиваем всегда с legalType='business' —
   // вкладка РКО не зависит от глобального cookie пользователя
-  const [allItems, businessItems, brokers, fundItems] = await Promise.all([
+  const [allItems, businessItems, brokers, fundItems, taxRules] = await Promise.all([
     getMatrixItemsForStatus(status, legalType),
     getMatrixItemsForStatus(status, 'business'),
     getAllBrokers(),
     getFundItemsForStatus(status),
+    getTaxRules(),
   ]);
 
-  let taxRules: TaxRuleWithCategory[] = [];
-  let serviceProviders: ServiceProvider[] = [];
-
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
-
-    const [taxRes, servicesRes] = await Promise.all([
-      supabase.from("tax_rules").select(`
-        id, category_id, user_legal_status, tax_type,
-        tax_rate_percent, is_tax_free, notes, legal_reference,
-        asset_categories ( id, name, code )
-      `),
-      supabase
-        .from("service_providers")
-        .select("*")
-        .order("is_promoted", { ascending: false })
-        .order("rating", { ascending: false }),
-    ]);
-
-    taxRules = (taxRes.data as unknown as TaxRuleWithCategory[]) || [];
-    serviceProviders = (servicesRes.data as ServiceProvider[]) || [];
-  }
+  // Эксперты/лиды пока сознательно не подключены — Supabase не используется,
+  // пока не появятся реальные специалисты и работающая отправка формы.
+  // См. манифест: решение зафиксировано, не забыть и не путать с багом.
+  const serviceProviders: ServiceProvider[] = [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

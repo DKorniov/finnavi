@@ -1,0 +1,92 @@
+{
+  "_comment": "Источник фактов — раздел 'КЛЮЧЕВЫЕ ФАКТЫ' манифеста v1.0 (налоги на инвестиционный доход в Сербии, 2025). Заполнено только для user_legal_status='individual' — для frilenser/preduzetnik_pausal/preduzetnik_knjigas данных по этим конкретным категориям активов в манифесте не было, не выдумывались. Дозаполнить при наличии реальных источников.",
+  "last_updated": "2026-06-20",
+  "asset_categories": [
+    { "id": "rs_gov_bonds", "name": "Гособлигации Сербии", "code": "RS_GOV_BONDS" },
+    { "id": "corp_bonds",   "name": "Корпоративные облигации", "code": "CORP_BONDS" },
+    { "id": "foreign_bonds","name": "Иностранные облигации", "code": "FOREIGN_BONDS" },
+    { "id": "stocks_etf",   "name": "Акции и ETF", "code": "STOCKS_ETF" }
+  ],
+  "tax_rules": [
+    {
+      "id": "rs_gov_coupon_individual",
+      "category_id": "rs_gov_bonds",
+      "user_legal_status": "individual",
+      "tax_type": "coupon",
+      "tax_rate_percent": 0,
+      "is_tax_free": true,
+      "notes": "Купоны по гособлигациям Сербии освобождены от налога для физических лиц.",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    },
+    {
+      "id": "rs_gov_cgt_individual",
+      "category_id": "rs_gov_bonds",
+      "user_legal_status": "individual",
+      "tax_type": "capital_gains",
+      "tax_rate_percent": 0,
+      "is_tax_free": true,
+      "notes": "Прирост капитала по гособлигациям Сербии исключён из налогооблагаемой базы (CGT).",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    },
+    {
+      "id": "corp_bonds_coupon_individual",
+      "category_id": "corp_bonds",
+      "user_legal_status": "individual",
+      "tax_type": "coupon",
+      "tax_rate_percent": 15,
+      "is_tax_free": false,
+      "notes": "Купоны по корпоративным облигациям облагаются стандартной ставкой 15%.",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    },
+    {
+      "id": "corp_bonds_cgt_individual",
+      "category_id": "corp_bonds",
+      "user_legal_status": "individual",
+      "tax_type": "capital_gains",
+      "tax_rate_percent": 0,
+      "is_tax_free": true,
+      "notes": "Прирост капитала по облигациям (включая корпоративные) исключён из CGT — облагается только купонный доход.",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    },
+    {
+      "id": "foreign_bonds_coupon_individual",
+      "category_id": "foreign_bonds",
+      "user_legal_status": "individual",
+      "tax_type": "coupon",
+      "tax_rate_percent": 15,
+      "is_tax_free": false,
+      "notes": "Купоны по иностранным облигациям (например, через IBKR) облагаются 15% с зачётом удержанного налога у источника по конвенции об избежании двойного налогообложения.",
+      "legal_reference": "Конвенция РФ–Сербия об избежании двойного налогообложения (действует с 1995 года)"
+    },
+    {
+      "id": "foreign_bonds_cgt_individual",
+      "category_id": "foreign_bonds",
+      "user_legal_status": "individual",
+      "tax_type": "capital_gains",
+      "tax_rate_percent": 0,
+      "is_tax_free": true,
+      "notes": "Прирост капитала по облигациям исключён из CGT независимо от страны эмитента.",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    },
+    {
+      "id": "stocks_etf_dividend_individual",
+      "category_id": "stocks_etf",
+      "user_legal_status": "individual",
+      "tax_type": "dividend",
+      "tax_rate_percent": 15,
+      "is_tax_free": false,
+      "notes": "Дивиденды по акциям и ETF облагаются стандартной ставкой 15%.",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    },
+    {
+      "id": "stocks_etf_cgt_individual",
+      "category_id": "stocks_etf",
+      "user_legal_status": "individual",
+      "tax_type": "capital_gains",
+      "tax_rate_percent": 15,
+      "is_tax_free": false,
+      "notes": "Прирост капитала по акциям и ETF облагается 15% — в отличие от облигаций, сюда CGT-исключение не применяется.",
+      "legal_reference": "Zakon o porezu na dohodak građana"
+    }
+  ]
+}

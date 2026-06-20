@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { ResidencyProvider } from "@/components/ResidencyProvider";
 import { StickyHeader } from "@/components/StickyHeader";
 import { OnboardingSheet } from "@/components/OnboardingSheet";
+import { MainShell } from "@/components/MainShell";
+import { Footer } from "@/components/Footer";
 import type { ResidencyStatus, LegalType } from "@/types/bank";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -56,9 +58,8 @@ export default async function RootLayout({
         <ResidencyProvider initialStatus={initialStatus} initialLegalType={initialLegalType}>
           <StickyHeader />
           <OnboardingSheet isFirstVisit={isFirstVisit} /> {/* ← монтируем */}
-          <main className="pt-20 pb-16">
-            {children}
-          </main>
+          <MainShell>{children}</MainShell>
+          <Footer />
         </ResidencyProvider>
       </body>
     </html>

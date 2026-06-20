@@ -185,15 +185,14 @@
       "is_multicurrency": false,
       "supported_currencies": [
         "RSD",
-        "EUR",
-        "RUB"
+        "EUR"
       ],
       "maintenance_fee_rsd": 300,
       "swift_in": {
         "pct": 0,
         "min_rsd": null,
         "max_rsd": null,
-        "notes": "USD не принимают. Рубли принимают без проблем."
+        "notes": "USD не принимают."
       },
       "swift_out": {
         "pct": 0.25,
@@ -217,7 +216,7 @@
       },
       "card_issue_days": "5–7 рабочих дней",
       "cashback": "Нет",
-      "bonuses": "Самый низкий исходящий SWIFT среди госбанков (0.25%). Приём рублёвых переводов без ограничений"
+      "bonuses": "Самый низкий исходящий SWIFT среди госбанков (0.25%)."
     },
     {
       "product_id": "ps_stednja_rsd_klasicna",
@@ -464,10 +463,9 @@
       "currencies": [
         "EUR",
         "USD",
-        "CHF",
-        "RUB"
+        "CHF"
       ],
-      "notes": "Один из немногих банков, принимающих рублёвые переводы без проблем (актуально с 2024)."
+      "notes": "Госбанк с одним из самых низких исходящих SWIFT-тарифов на рынке."
     }
   ]
 }

@@ -423,6 +423,21 @@ function bestRate(item: TransformedMatrixItem): number {
   return terms.length > 0 ? Math.max(...terms.map(t => t.rate_pct)) : 0;
 }
 
+// Ставка за КОНКРЕТНЫЙ срок — для корректного сравнения "3 мес у банка А vs 3 мес у банка Б".
+// В отличие от bestRate() (максимум по всем срокам сразу), эта функция не вводит в заблуждение.
+function rateForTerm(item: TransformedMatrixItem, months: number): number | null {
+  const terms = asSavings(item).terms ?? [];
+  const match = terms.find(t => t.term_months === months);
+  return match ? match.rate_pct : null;
+}
+
+// Ставка для отображения с учётом выбранного в фильтре срока: если срок не выбран —
+// обычный максимум (обзорный режим), если выбран — именно ставка за этот срок.
+function effectiveRate(item: TransformedMatrixItem, selectedTermMonths: number | null): number {
+  if (selectedTermMonths == null) return bestRate(item);
+  return rateForTerm(item, selectedTermMonths) ?? 0;
+}
+
 function termLabel(months: number): string {
   if (months === 0)  return "До вост.";
   if (months === 1)  return "1 мес";
@@ -456,15 +471,18 @@ function minStr(item: TransformedMatrixItem): string {
 // ─────────────────────────────────────────────────────────────────────────────
 // Панель фильтров
 // ─────────────────────────────────────────────────────────────────────────────
-function FilterPanel({ filters, onChange, bestRsd, bestEur }: {
+function FilterPanel({ filters, onChange, bestRsd, bestEur, selectedTermMonths }: {
   filters: Filters;
   onChange: (f: Filters) => void;
   bestRsd: number | null;
   bestEur: number | null;
+  selectedTermMonths: number | null;
 }) {
   function set<K extends keyof Filters>(key: K, value: Filters[K]) {
     onChange({ ...filters, [key]: value });
   }
+
+  const termSuffix = selectedTermMonths != null ? ` (${termLabel(selectedTermMonths)})` : "";
 
   const checkboxes: Array<{ key: keyof Pick<Filters, "nonres"|"monthly"|"partial"|"grace"|"cap">; label: string }> = [
     { key: "nonres",  label: "Нерезидентам" },
@@ -499,12 +517,12 @@ function FilterPanel({ filters, onChange, bestRsd, bestEur }: {
         <div className="flex items-center gap-2 flex-wrap">
           {bestRsd !== null && (
             <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 whitespace-nowrap">
-              RSD до {bestRsd}%
+              RSD до {bestRsd}%{termSuffix}
             </span>
           )}
           {bestEur !== null && (
             <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 whitespace-nowrap">
-              EUR до {bestEur}%
+              EUR до {bestEur}%{termSuffix}
             </span>
           )}
         </div>
@@ -525,9 +543,24 @@ function FilterPanel({ filters, onChange, bestRsd, bestEur }: {
 // ─────────────────────────────────────────────────────────────────────────────
 // Строка продукта — стиль BankMatrix (горизонтальная плашка)
 // ─────────────────────────────────────────────────────────────────────────────
-function ProductRow({ item, onDrawer }: {
+function probLabel(probability: TransformedMatrixItem["probability"], isAvailable: boolean): string {
+  if (!isAvailable || probability === "blocked") return "Не открывают";
+  if (probability === "high") return "Высокая вероятность";
+  if (probability === "medium") return "Сербский рандом";
+  return "Сложно открыть";
+}
+
+function probBadgeClass(probability: TransformedMatrixItem["probability"], isAvailable: boolean): string {
+  if (!isAvailable || probability === "blocked") return "bg-red-50 text-red-700";
+  if (probability === "high") return "bg-emerald-50 text-emerald-700";
+  if (probability === "medium") return "bg-amber-50 text-amber-700";
+  return "bg-orange-50 text-orange-700";
+}
+
+function ProductRow({ item, onDrawer, selectedTermMonths }: {
   item: TransformedMatrixItem;
   onDrawer: (item: TransformedMatrixItem) => void;
+  selectedTermMonths: number | null;
 }) {
   const p = asSavings(item);
   const bankName  = p.banks.name;
@@ -536,6 +569,8 @@ function ProductRow({ item, onDrawer }: {
   const logoInit  = BANKS_INITIALS[bankName] ?? "??";
   const terms     = p.terms ?? [];
   const best      = bestRate(item);
+  const displayRate = effectiveRate(item, selectedTermMonths);
+  const isBlocked = !item.is_available || item.probability === "blocked";
 
   // Тег-чипы
   const tags: ReactElement[] = [];
@@ -565,93 +600,122 @@ function ProductRow({ item, onDrawer }: {
     tags.push(<span key="combi" className="inline-flex items-center text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200">Combi</span>);
 
   return (
-    <div className="flex items-stretch bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 hover:shadow-xs transition-all">
-
-      {/* Логотип */}
-      <div
-        className="w-12 flex-shrink-0 flex items-center justify-center text-xs font-bold"
-        style={{ backgroundColor: logoColor, color: logoText }}
-      >
-        {logoInit}
-      </div>
-
-      {/* Основной блок */}
-      <div className="flex-1 px-4 py-3 border-l border-slate-100 min-w-0">
-        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">{bankName}</p>
-        <p className="text-sm font-semibold text-slate-900 mb-2.5 leading-snug">{p.name}</p>
-
-        {/* Чипы сроков */}
-        <div className="flex gap-1.5 flex-wrap mb-2.5">
-          {terms.slice(0, 6).map(t => {
-            const isBest = t.rate_pct === best && best > 0;
-            return (
-              <div key={t.term_months}
-                className={`flex flex-col items-center px-2 py-1 rounded-lg border min-w-[44px] ${
-                  isBest ? "border-emerald-300 bg-emerald-50" : "border-slate-200 bg-slate-50"
-                }`}>
-                <span className="text-[9px] text-slate-400">{termLabel(t.term_months)}</span>
-                <span className={`text-xs font-bold ${
-                  isBest ? "text-emerald-700" : t.rate_pct === 0 ? "text-slate-400" : "text-slate-800"
-                }`}>{t.rate_pct > 0 ? `${t.rate_pct}%` : "0%"}</span>
-              </div>
-            );
-          })}
-          {terms.length > 6 && (
-            <div className="flex flex-col items-center px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 min-w-[44px]">
-              <span className="text-[9px] text-slate-400">ещё</span>
-              <span className="text-xs font-bold text-slate-500">+{terms.length - 6}</span>
-            </div>
-          )}
+    <article
+      className={`bg-white border rounded-2xl px-5 py-4 transition-colors ${
+        isBlocked ? "border-slate-100 opacity-60" : "border-slate-200 hover:border-slate-300"
+      }`}
+    >
+      <div className="flex items-center gap-3 flex-wrap">
+        {/* Лого */}
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-semibold shrink-0"
+          style={{ backgroundColor: logoColor, color: logoText }}
+        >
+          {logoInit}
         </div>
 
-        {/* Теги */}
-        <div className="flex gap-1 flex-wrap">{tags}</div>
-      </div>
+        {/* Название + банк */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-slate-900 leading-snug truncate">{p.name}</p>
+          <p className="text-xs text-slate-400 mt-0.5">{bankName}</p>
+        </div>
 
-      {/* Ставка */}
-      <div className="w-24 flex-shrink-0 flex flex-col items-center justify-center px-3 border-l border-slate-100 text-center">
-        <span className={`font-bold leading-none ${
-          best >= 4 ? "text-xl text-emerald-700" :
-          best >= 1 ? "text-lg text-slate-800" :
-          "text-base text-slate-400"
-        }`}>
-          {best > 0 ? `${best % 1 === 0 ? best : best.toFixed(2)}%` : "—"}
+        {/* Ставка — за выбранный срок, либо максимум по всем срокам в обзорном режиме */}
+        <div className="text-right shrink-0">
+          <p className="text-[11px] text-slate-400">
+            {selectedTermMonths != null ? `ставка ${termLabel(selectedTermMonths)}` : "макс. ставка"}
+          </p>
+          <p className={`text-sm font-semibold ${displayRate > 0 ? "text-emerald-700" : "text-slate-400"}`}>
+            {displayRate > 0 ? `${displayRate % 1 === 0 ? displayRate : displayRate.toFixed(2)}%` : "—"}
+          </p>
+        </div>
+
+        {/* Мин. сумма */}
+        {minStr(item) && (
+          <div className="text-right shrink-0 hidden sm:block">
+            <p className="text-[11px] text-slate-400">мин. сумма</p>
+            <p className="text-sm font-semibold text-slate-800">{minStr(item)}</p>
+          </div>
+        )}
+
+        {/* Вероятность */}
+        <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 ${probBadgeClass(item.probability, item.is_available)}`}>
+          {probLabel(item.probability, item.is_available)}
         </span>
-        <span className="text-[10px] text-slate-400 mt-1">макс. ставка</span>
-        {minStr(item) && <span className="text-[10px] text-slate-400 mt-0.5">{minStr(item)}</span>}
-      </div>
 
-      {/* Кнопка */}
-      <div className="flex flex-col gap-1.5 items-center justify-center px-3 py-3 border-l border-slate-100 flex-shrink-0 min-w-[100px]">
+        {/* Кнопка ⓘ */}
+        <button
+          onClick={() => onDrawer(item)}
+          aria-label={`Условия: ${p.name}`}
+          className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:border-slate-300 transition-colors shrink-0"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+
+        {/* Кнопка Подробнее */}
         <Link
           href={`/accounts/product/${p.product_id}`}
-          className="w-full text-center text-xs font-semibold py-2 px-3 rounded-lg border border-slate-900 bg-slate-900 hover:bg-slate-800 text-white transition-colors"
+          className="shrink-0 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition-colors"
         >
           Подробнее
         </Link>
-        <button
-          onClick={() => onDrawer(item)}
-          className="w-full text-xs py-1.5 px-3 rounded-lg border border-slate-100 bg-transparent hover:bg-slate-50 text-slate-500 transition-colors flex items-center justify-center gap-1"
-        >
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Условия
-        </button>
       </div>
-    </div>
+
+      {/* Чипы сроков + теги — отдельной строкой снизу */}
+      <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-slate-100">
+        {terms.slice(0, 6).map(t => {
+          const isHighlighted = selectedTermMonths != null
+            ? t.term_months === selectedTermMonths
+            : (t.rate_pct === best && best > 0);
+          return (
+            <div key={t.term_months}
+              className={`flex flex-col items-center px-2 py-1 rounded-lg border min-w-[44px] ${
+                isHighlighted ? "border-emerald-300 bg-emerald-50" : "border-slate-200 bg-slate-50"
+              }`}>
+              <span className="text-[9px] text-slate-400">{termLabel(t.term_months)}</span>
+              <span className={`text-xs font-bold ${
+                isHighlighted ? "text-emerald-700" : t.rate_pct === 0 ? "text-slate-400" : "text-slate-800"
+              }`}>{t.rate_pct > 0 ? `${t.rate_pct}%` : "0%"}</span>
+            </div>
+          );
+        })}
+        {terms.length > 6 && (
+          <div className="flex flex-col items-center px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 min-w-[44px]">
+            <span className="text-[9px] text-slate-400">ещё</span>
+            <span className="text-xs font-bold text-slate-500">+{terms.length - 6}</span>
+          </div>
+        )}
+        <div className="w-px h-6 bg-slate-200 mx-1" />
+        {tags}
+      </div>
+    </article>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Секция (RSD / EUR)
+// Секция (RSD / EUR) — опционально с под-группировкой по банку внутри
 // ─────────────────────────────────────────────────────────────────────────────
-function Section({ title, items, onDrawer }: {
+function Section({ title, items, onDrawer, groupByBank, selectedTermMonths }: {
   title: string;
   items: TransformedMatrixItem[];
   onDrawer: (item: TransformedMatrixItem) => void;
+  groupByBank: boolean;
+  selectedTermMonths: number | null;
 }) {
+  const groupedByBank = useMemo(() => {
+    if (!groupByBank) return null;
+    return items.reduce((acc, item) => {
+      const bankName = item.products.banks.name;
+      if (!acc[bankName]) acc[bankName] = [];
+      acc[bankName].push(item);
+      return acc;
+    }, {} as Record<string, TransformedMatrixItem[]>);
+  }, [items, groupByBank]);
+
   if (items.length === 0) return null;
+
   return (
     <div className="mt-5">
       <div className="flex items-center gap-2 mb-3">
@@ -660,11 +724,29 @@ function Section({ title, items, onDrawer }: {
           {items.length}
         </span>
       </div>
-      <div className="flex flex-col gap-2">
-        {items.map(item => (
-          <ProductRow key={item.id} item={item} onDrawer={onDrawer} />
-        ))}
-      </div>
+
+      {groupedByBank ? (
+        <div className="flex flex-col gap-4">
+          {Object.entries(groupedByBank).map(([bankName, bankItems]) => (
+            <div key={bankName}>
+              <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-2 pl-1">
+                {bankName}
+              </p>
+              <div className="flex flex-col gap-2">
+                {bankItems.map(item => (
+                  <ProductRow key={item.id} item={item} onDrawer={onDrawer} selectedTermMonths={selectedTermMonths} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {items.map(item => (
+            <ProductRow key={item.id} item={item} onDrawer={onDrawer} selectedTermMonths={selectedTermMonths} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -683,6 +765,8 @@ export function SavingsTab({ items }: SavingsTabProps) {
   });
   const [drawerItem, setDrawerItem] = useState<TransformedMatrixItem | null>(null);
 
+  const selectedTermMonths = filters.term !== "all" ? parseInt(filters.term, 10) : null;
+
   const filtered = useMemo(() => {
     let list = items.filter(i => i.products.category === "savings_deposit");
     if (filters.cur === "RSD") list = list.filter(isRSD);
@@ -696,7 +780,10 @@ export function SavingsTab({ items }: SavingsTabProps) {
     if (filters.partial) list = list.filter(i => asSavings(i).partial_withdrawal_allowed === true);
     if (filters.grace)   list = list.filter(i => asSavings(i).grace_period_termination === true);
     if (filters.cap)     list = list.filter(i => asSavings(i).capitalization_type != null);
-    if (filters.sort === "rate") list.sort((a, b) => bestRate(b) - bestRate(a));
+    // Сортировка по ставке — за выбранный срок, если он выбран (иначе по максимуму,
+    // как и раньше). Без этого "По ставке" сортировала бы по чужому для пользователя
+    // числу, когда он уже сузил выбор до конкретного срока.
+    if (filters.sort === "rate") list.sort((a, b) => effectiveRate(b, selectedTermMonths) - effectiveRate(a, selectedTermMonths));
     else if (filters.sort === "bank") list.sort((a, b) => a.products.banks.name.localeCompare(b.products.banks.name));
     else if (filters.sort === "min") {
       list.sort((a, b) => {
@@ -705,18 +792,18 @@ export function SavingsTab({ items }: SavingsTabProps) {
       });
     }
     return list;
-  }, [items, filters]);
+  }, [items, filters, selectedTermMonths]);
 
   const rsdItems = useMemo(() => filtered.filter(isRSD), [filtered]);
   const eurItems = useMemo(() => filtered.filter(i => !isRSD(i)), [filtered]);
-  const bestRsd = rsdItems.length ? Math.max(...rsdItems.map(bestRate)) : null;
-  const bestEur = eurItems.length ? Math.max(...eurItems.map(bestRate)) : null;
+  const bestRsd = rsdItems.length ? Math.max(...rsdItems.map(i => effectiveRate(i, selectedTermMonths))) : null;
+  const bestEur = eurItems.length ? Math.max(...eurItems.map(i => effectiveRate(i, selectedTermMonths))) : null;
 
   const handleDrawer = useCallback((item: TransformedMatrixItem) => setDrawerItem(item), []);
 
   return (
     <>
-      <FilterPanel filters={filters} onChange={setFilters} bestRsd={bestRsd} bestEur={bestEur} />
+      <FilterPanel filters={filters} onChange={setFilters} bestRsd={bestRsd} bestEur={bestEur} selectedTermMonths={selectedTermMonths} />
 
       {filtered.length === 0 ? (
         <div className="text-center py-14 bg-white rounded-xl border border-dashed border-slate-200 text-slate-400 text-sm mt-4">
@@ -724,8 +811,8 @@ export function SavingsTab({ items }: SavingsTabProps) {
         </div>
       ) : (
         <>
-          <Section title="RSD-вклады (0% налог)"       items={rsdItems} onDrawer={handleDrawer} />
-          <Section title="Валютные вклады (15% налог)" items={eurItems} onDrawer={handleDrawer} />
+          <Section title="RSD-вклады (0% налог)"       items={rsdItems} onDrawer={handleDrawer} groupByBank selectedTermMonths={selectedTermMonths} />
+          <Section title="Валютные вклады (15% налог)" items={eurItems} onDrawer={handleDrawer} groupByBank selectedTermMonths={selectedTermMonths} />
         </>
       )}
 

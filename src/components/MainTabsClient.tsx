@@ -4,6 +4,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { BankMatrix } from "@/components/Accounts/BankMatrix";
+import { BusinessAccountTab } from "@/components/Accounts/BusinessAccountTab";
+import { TransferTab } from "@/components/Transfers/TransferTab"; 
 import { InvestTab } from "@/components/Invest/InvestTab";
 import { SavingsTab } from "@/components/Savings/SavingsTab";
 import { TaxOptimizer } from "@/components/Taxes/TaxOptimizer";
@@ -121,8 +123,10 @@ export function MainTabsClient({
             <p className="text-slate-400 text-sm">Нет данных для выбранного статуса</p>
           </div>
         ) : (
-          <BankMatrix initialItems={visibleBusinessItems} />
+          <BusinessAccountTab items={visibleBusinessItems} />
         )
+      ) : activeTab === 'transfer' ? (
+        <TransferTab items={allItems.filter(i => i.products.category === 'transfer')} />
       ) : visibleItems.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200">
           <p className="text-slate-400 text-sm">Нет данных для выбранного статуса</p>

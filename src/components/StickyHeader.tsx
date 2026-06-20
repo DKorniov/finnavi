@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useResidency } from "./ResidencyProvider";
 import type { ResidencyStatus } from "@/types/bank";
 
@@ -17,6 +18,8 @@ export function StickyHeader() {
   const { status, setStatus } = useResidency();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -27,6 +30,13 @@ export function StickyHeader() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // На голом лендинге (/, без ?tab=) у LandingPage свой навбар с лого и CTA —
+  // системный хедер здесь только дублирует его. На всех остальных роутах
+  // (/?tab=…, /accounts, /funds/product/[id] и т.д.) рендерим как обычно.
+  // Важно: это ПОСЛЕ всех хуков — хуки не могут вызываться условно.
+  const isBareLanding = pathname === "/" && !searchParams.get("tab");
+  if (isBareLanding) return null;
 
   const currentLabel = TABS.find(t => t.id === status)?.label ?? "Статус";
 

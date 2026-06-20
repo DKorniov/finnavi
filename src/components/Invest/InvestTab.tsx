@@ -3,6 +3,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { FundsTab } from "@/components/Invest/FundsTab";
+import { BrokerTab } from "@/components/Invest/BrokerTab";
 import type { TransformedMatrixItem, ResidencyStatus } from "@/types/bank";
 import type { BrokerJSON } from "@/types/broker";
 import type { TransformedFundItem } from "@/types/fund";
@@ -55,7 +56,15 @@ export function InvestTab({ bondItems, brokers = [], fundItems = [], currentStat
 
       {/* Контент подвкладки */}
       {activeSubTab === 'bonds'   && <BondsContent items={bondItems} />}
-      {activeSubTab === 'brokers' && <BrokersContent brokers={brokers} currentStatus={currentStatus} />}
+      {activeSubTab === 'brokers' && (
+        <div>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm text-slate-700">
+            <span className="font-bold block mb-1">Международные брокеры из Сербии</span>
+            Доступность и маршруты пополнения для держателей РФ/РБ паспортов. Данные основаны на отзывах экспат-комьюнити.
+          </div>
+          <BrokerTab brokers={brokers} currentStatus={currentStatus} />
+        </div>
+      )}
       {activeSubTab === 'etf'     && <EtfContent />}
       {activeSubTab === 'funds'   && <FundsTab items={fundItems} />}
     </div>
@@ -86,34 +95,6 @@ function BondsContent({ items }: { items: TransformedMatrixItem[] }) {
           <BondCard key={item.id} item={item} />
         ))}
       </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────
-// Брокеры
-// ─────────────────────────────────────────
-function BrokersContent({ brokers, currentStatus }: { brokers: BrokerJSON[]; currentStatus: ResidencyStatus }) {
-  return (
-    <div>
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm text-slate-700">
-        <span className="font-bold block mb-1">Международные брокеры из Сербии</span>
-        Доступность и маршруты пополнения для держателей РФ/РБ паспортов. Данные основаны на отзывах экспат-комьюнити.
-      </div>
-      {brokers.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl border border-dashed border-slate-200">
-          <p className="text-slate-400 text-sm">
-            Нет данных о брокерах. Убедитесь что файлы размещены в{" "}
-            <code className="bg-slate-100 px-1 rounded">data/brokers/</code>
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {brokers.map(broker => (
-            <BrokerCard key={broker.broker_id} broker={broker} currentStatus={currentStatus} />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -228,107 +209,5 @@ function BondCard({ item }: { item: TransformedMatrixItem }) {
         </div>
       </div>
     </div>
-  );
-}
-
-// ─────────────────────────────────────────
-// Карточка брокера
-// ─────────────────────────────────────────
-function BrokerCard({ broker, currentStatus }: { broker: BrokerJSON; currentStatus: ResidencyStatus }) {
-  const availability = broker.availability.find(a => a.status === currentStatus);
-  const isAvailable = availability?.is_available ?? true;
-  const probability = availability?.probability ?? 'medium';
-
-  const bestRoute = broker.funding_routes.find(r => r.success_rate === 'high')
-    ?? broker.funding_routes[0];
-
-  return (
-    <div className={`bg-white border rounded-xl overflow-hidden flex flex-col ${
-      isAvailable ? 'border-slate-200 hover:border-slate-300 hover:shadow-sm' : 'border-red-100 opacity-75'
-    } transition-all`}>
-
-      <div className="px-5 pt-5 pb-3 border-b border-slate-100">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-xs shrink-0"
-              style={{ backgroundColor: broker.logo_color }}
-            >
-              {broker.brand_name.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900">{broker.brand_name}</h3>
-              <p className="text-[10px] text-slate-400">Международный брокер</p>
-            </div>
-          </div>
-          <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-full uppercase ${
-            !isAvailable
-              ? 'bg-red-50 text-red-700'
-              : probability === 'high'
-                ? 'bg-emerald-50 text-emerald-700'
-                : 'bg-amber-50 text-amber-700'
-          }`}>
-            {!isAvailable ? 'Недоступен' : probability === 'high' ? 'Стабилен' : '⚠ Нестабилен'}
-          </span>
-        </div>
-      </div>
-
-      <div className="px-5 py-3 border-b border-slate-100">
-        <div className="flex flex-wrap gap-1.5">
-          {broker.instruments.stocks      && <Tag label="Акции" />}
-          {broker.instruments.etf         && <Tag label="ETF" />}
-          {broker.instruments.bonds_world && <Tag label="Облигации мира" />}
-          {broker.instruments.options     && <Tag label="Опционы" />}
-          {broker.instruments.crypto      && <Tag label="Крипто" />}
-        </div>
-      </div>
-
-      {bestRoute && (
-        <div className="px-5 py-3 border-b border-slate-100 text-xs">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-            Лучший маршрут пополнения
-          </p>
-          <div className="flex justify-between items-center">
-            <span className="text-slate-700 font-medium">{bestRoute.bank_name}</span>
-            <span className="font-bold text-slate-900">{bestRoute.fee_pct}%</span>
-          </div>
-          <p className="text-slate-400 mt-1 leading-relaxed">{bestRoute.notes}</p>
-        </div>
-      )}
-
-      <div className="px-5 py-3 flex-1 text-xs space-y-1">
-        {broker.pros.slice(0, 2).map((pro, i) => (
-          <div key={i} className="flex items-start gap-1.5">
-            <span className="text-emerald-500 shrink-0 mt-0.5">✓</span>
-            <span className="text-slate-600">{pro}</span>
-          </div>
-        ))}
-        {broker.risks.length > 0 && (
-          <div className="flex items-start gap-1.5 mt-1">
-            <span className="text-amber-500 shrink-0 mt-0.5">⚠</span>
-            <span className="text-slate-500">{broker.risks[0]}</span>
-          </div>
-        )}
-      </div>
-
-      <div className="px-5 pb-5 pt-2">
-        <a
-          href={broker.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full text-center text-xs font-bold py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-colors"
-        >
-          Открыть счёт →
-        </a>
-      </div>
-    </div>
-  );
-}
-
-function Tag({ label }: { label: string }) {
-  return (
-    <span className="text-[10px] font-medium px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
-      {label}
-    </span>
   );
 }
